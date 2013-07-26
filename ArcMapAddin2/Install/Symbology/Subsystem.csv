@@ -1,0 +1,11 @@
+L,1,Limnetic
+L,2,Littoral
+R,2,Low Perenniel
+R,3,Upper Perenniel
+R,4,Intermittant
+R,5,Unknown Perenniel
+M,2,Intertidal - Marine
+E,2,Intertidal - Estuarine
+M,1,Subtidal - Marine
+E,1,Subtidal - Estuarine
+R,1,Tidal

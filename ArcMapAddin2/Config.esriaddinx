@@ -1,0 +1,47 @@
+﻿<ESRI.Configuration xmlns="http://schemas.esri.com/Desktop/AddIns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>GeorgiaWetlandTool</Name>
+  <AddInID>{a6e2253a-7b44-4f92-a477-ee55801e908f}</AddInID>
+  <Description>Type in a description for this Add-in.</Description>
+  <Version>1.0</Version>
+  <Image>Images\ArcMapAddin2.png</Image>
+  <Author>gtg221h</Author>
+  <Company>CGIS, Georgia Tech</Company>
+  <Date>5/24/2013</Date>
+  <Targets>
+    <Target name="Desktop" version="10.0" />
+  </Targets>
+  <AddIn language="CLR" library="GAWetlands.dll" namespace="GAWetlands" >
+    <ArcMap>
+      <Toolbars>
+        <Toolbar id="Wetlands_Georgia_Wetlands" caption="Georgia Wetlands" showInitially="true" >
+          <Items>
+            <Button refID="BtnSymbolize_System"></Button>
+            <Button refID="BtnSymbolize_Class"></Button>
+            <Button refID="BtnSymbolize_Regime"></Button>
+            <Button refID="BtnSymbolize_Special"></Button>
+            <Button refID="BtnSymbolize_Chemistry"></Button>
+            <Button refID="BtnSymbolize_Soil"></Button>
+
+            <Button refID="BtnQuery_All"></Button>
+
+            <Tool refID="BtnClipByPolygon"></Tool>
+            <Tool refID="BtnClipByRadius"></Tool>
+          </Items>
+        </Toolbar>
+      </Toolbars>
+      <Commands>
+        <Button id="BtnSymbolize_System"    class="BtnSymbolize_System"     message="." caption="Symbolize by System" tip="Symbolize by System." category="NWI" image="Images\BtnSymbolize_Class.png"  onDemand="false"/>
+        <Button id="BtnSymbolize_Class"     class="BtnSymbolize_Class"      message="." caption="Symbolize by Class" tip="Symbolize by Class." category="NWI" image="Images\BtnSymbolize_Class.png" onDemand="false" />
+        <Button id="BtnSymbolize_Regime"    class="BtnSymbolize_Regime"     message="." caption="Symbolize by Water Regime" tip="Symbolize by Water Regime." category="NWI" image="Images\BtnSymbolize_Class.png" onDemand="false"/>
+        <Button id="BtnSymbolize_Special"   class="BtnSymbolize_Special"    message="." caption="Symbolize by Special Modifier" tip="Symbolize by Special Modifier." category="NWI" image="Images\BtnSymbolize_Class.png" onDemand="false" />
+        <Button id="BtnSymbolize_Chemistry" class="BtnSymbolize_Chemistry"  message="." caption="Symbolize by Chemistry" tip="Symbolize by Chemistry." category="NWI" image="Images\BtnSymbolize_Class.png" onDemand="false"/>
+        <Button id="BtnSymbolize_Soil"      class="BtnSymbolize_Soil"       message="." caption="Symbolize by Soil" tip="Symbolize by Soil." category="NWI" image="Images\BtnSymbolize_Class.png" onDemand="false"/>
+
+        <Button id="BtnQuery_All"           class="BtnQueryAll"             message="." caption="Perform queries on an NWI layer." category="NWI" image="Images\sigma.png" />
+
+        <Tool id="BtnClipByPolygon"         class="ClipNWIByPolygon"        message="." caption="Clip NWI by polygon" category="NWI"/>
+        <Tool id="BtnClipByRadius"          class="ClipNWIByRadius"        message="." caption="Clip NWI by radius from selected point." category="NWI"/>
+      </Commands>
+    </ArcMap>
+  </AddIn>
+</ESRI.Configuration>
