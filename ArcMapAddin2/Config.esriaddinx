@@ -28,14 +28,34 @@
             <Tool refID="BtnClipByRadius"></Tool>
           </Items>
         </Toolbar>
+
+        <Toolbar id="Wetlands_Georgia_Plus" caption="Georgia Wetlands NWI Plus" showInitially="true" >
+          <Items>
+            <Button refID="BtnSymbolize_Landform"></Button>
+            <Button refID="BtnSymbolize_Landscape"></Button>
+            <Button refID="BtnSymbolize_Waterflow"></Button>
+            <Button refID="BtnSymbolize_Waterbody"></Button>
+
+            <Button refID="BtnQuery_All"></Button>
+
+            <Tool refID="BtnClipByPolygon"></Tool>
+            <Tool refID="BtnClipByRadius"></Tool>
+          </Items>
+        </Toolbar>
+
       </Toolbars>
       <Commands>
-        <Button id="BtnSymbolize_System"    class="BtnSymbolize_System"     message="." caption="Symbolize by System" tip="Symbolize by System." category="NWI" image="Images\BtnSymbolize_Class.png"  onDemand="false"/>
-        <Button id="BtnSymbolize_Class"     class="BtnSymbolize_Class"      message="." caption="Symbolize by Class" tip="Symbolize by Class." category="NWI" image="Images\BtnSymbolize_Class.png" onDemand="false" />
-        <Button id="BtnSymbolize_Regime"    class="BtnSymbolize_Regime"     message="." caption="Symbolize by Water Regime" tip="Symbolize by Water Regime." category="NWI" image="Images\BtnSymbolize_Class.png" onDemand="false"/>
-        <Button id="BtnSymbolize_Special"   class="BtnSymbolize_Special"    message="." caption="Symbolize by Special Modifier" tip="Symbolize by Special Modifier." category="NWI" image="Images\BtnSymbolize_Class.png" onDemand="false" />
-        <Button id="BtnSymbolize_Chemistry" class="BtnSymbolize_Chemistry"  message="." caption="Symbolize by Chemistry" tip="Symbolize by Chemistry." category="NWI" image="Images\BtnSymbolize_Class.png" onDemand="false"/>
-        <Button id="BtnSymbolize_Soil"      class="BtnSymbolize_Soil"       message="." caption="Symbolize by Soil" tip="Symbolize by Soil." category="NWI" image="Images\BtnSymbolize_Class.png" onDemand="false"/>
+        <Button id="BtnSymbolize_System"    class="BtnSymbolize_System"     message="." caption="Symbolize by System" tip="Symbolize by System." category="NWI" onDemand="false"                         image="Images\BtnSymbolize_System.png"/>
+        <Button id="BtnSymbolize_Class"     class="BtnSymbolize_Class"      message="." caption="Symbolize by Class" tip="Symbolize by Class." category="NWI" onDemand="false"                           image="Images\BtnSymbolize_Class.png"/>
+        <Button id="BtnSymbolize_Regime"    class="BtnSymbolize_Regime"     message="." caption="Symbolize by Water Regime" tip="Symbolize by Water Regime." category="NWI" onDemand="false"             image="Images\BtnSymbolize_Water.png"/>
+        <Button id="BtnSymbolize_Special"   class="BtnSymbolize_Special"    message="." caption="Symbolize by Special Modifier" tip="Symbolize by Special Modifier." category="NWI" onDemand="false"     image="Images\BtnSymbolize_Special.png"/>
+        <Button id="BtnSymbolize_Chemistry" class="BtnSymbolize_Chemistry"  message="." caption="Symbolize by Chemistry" tip="Symbolize by Chemistry." category="NWI" onDemand="false"                   image="Images\BtnSymbolize_Chem.png"/>
+        <Button id="BtnSymbolize_Soil"      class="BtnSymbolize_Soil"       message="." caption="Symbolize by Soil" tip="Symbolize by Soil." category="NWI" onDemand="false"                             image="Images\BtnSymbolize_Soil.png"/>
+
+        <Button id="BtnSymbolize_Landscape" class="BtnSymbolize_Landscape"  message="." caption="Symbolize by Landscape" tip="Symbolize by Landscape" category="NWI Plus" onDemand="false"></Button>
+        <Button id="BtnSymbolize_Landform"  class="BtnSymbolize_Landform"  message="."  caption="Symbolize by Landform" tip="Symbolize by Landscape" category="NWI Plus" onDemand="false"></Button>
+        <Button id="BtnSymbolize_Waterform"  class="BtnSymbolize_Waterform"  message="."  caption="Symbolize by Waterflow" tip="Symbolize by Landscape" category="NWI Plus" onDemand="false"></Button>
+        <Button id="BtnSymbolize_Waterbody"  class="BtnSymbolize_Waterbody"  message="."  caption="Symbolize by Waterbody" tip="Symbolize by Landscape" category="NWI Plus" onDemand="false"></Button>
 
         <Button id="BtnQuery_All"           class="BtnQueryAll"             message="." caption="Perform queries on an NWI layer." category="NWI" image="Images\sigma.png" />
 

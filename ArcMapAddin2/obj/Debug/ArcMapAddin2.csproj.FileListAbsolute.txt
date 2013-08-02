@@ -6,6 +6,5 @@ C:\Documents and Settings\gtg221h\My Documents\Visual Studio 2010\Projects\ArcMa
 C:\Documents and Settings\gtg221h\My Documents\Visual Studio 2010\Projects\ArcMapAddin2\ArcMapAddin2\obj\Debug\GenerateResource-ResGen.write.1.tlog
 C:\Documents and Settings\gtg221h\My Documents\Visual Studio 2010\Projects\ArcMapAddin2\ArcMapAddin2\obj\Debug\GAWetlands.dll
 C:\Documents and Settings\gtg221h\My Documents\Visual Studio 2010\Projects\ArcMapAddin2\ArcMapAddin2\obj\Debug\GAWetlands.pdb
-C:\Documents and Settings\gtg221h\my documents\visual studio 2010\Projects\ArcMapAddin2\ArcMapAddin2\bin\Debug\Config.Designer.cs
 C:\Documents and Settings\gtg221h\my documents\visual studio 2010\Projects\ArcMapAddin2\ArcMapAddin2\obj\Debug\GAWetlands.Form2.resources
 C:\Documents and Settings\gtg221h\my documents\visual studio 2010\Projects\ArcMapAddin2\ArcMapAddin2\bin\Debug\GAWetlands.esriAddIn

@@ -92,6 +92,94 @@ namespace GAWetlands
         private static Geoprocessor gp = new Geoprocessor();
 
         public static void doSymbolizeLayer(IActiveView activeView, int i, string symbType) {
+            try
+            {
+                if (ArcMap.Document.SelectedLayer == null)
+                {
+                    System.Windows.Forms.MessageBox.Show("Select a layer before continuing.");
+                    return;
+                }
+
+                IFeatureLayer ifl = (IFeatureLayer)ArcMap.Document.SelectedLayer;
+
+                if (ifl.FeatureClass.FindField(symbType) < 0)
+                {
+                    System.Windows.Forms.MessageBox.Show("Selected layer does not contain the " + symbType + " field and can't be symbolized " +
+                        "with this tool. Select another layer to continue.");
+                    return;
+                }
+
+                string geomTypeName = "Polygon";
+
+                if (ifl.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolyline)
+                    geomTypeName = "Polyline";
+
+                var asmPath = GetAssemblyPath();
+
+                ILayerFile layerFile = new LayerFileClass();
+                layerFile.Open(asmPath + "/Symbology/" + symbType + "_" + geomTypeName + ".lyr");
+                IGeoFeatureLayer igfl = (IGeoFeatureLayer)layerFile.Layer;
+                IUniqueValueRenderer iuvr = (IUniqueValueRenderer)igfl.Renderer;
+                iuvr.UseDefaultSymbol = false;
+
+                IFeatureWorkspace iw = (IFeatureWorkspace)((IDataset)ifl.FeatureClass).Workspace;
+                ISQLSyntax sql = (ISQLSyntax)iw;
+
+                string prefix = sql.GetSpecialCharacter(esriSQLSpecialCharacters.esriSQL_DelimitedIdentifierPrefix);
+                string suffix = sql.GetSpecialCharacter(esriSQLSpecialCharacters.esriSQL_DelimitedIdentifierSuffix);
+
+                IQueryFilter f = new QueryFilterClass();
+                int vCount = iuvr.ValueCount;
+
+                List<string> values = new List<string>();
+
+                for (int j = 0; j < vCount; j++)
+                {                    
+                    f.SubFields = symbType;
+                    f.WhereClause = prefix + symbType + suffix + " = '" + iuvr.Value[j] + "'";
+
+                    ICursor fc = null;
+
+                    try
+                    {
+                        fc = ((ITable)ifl).Search(f, true);
+                        fc = ( fc.NextRow() == null ) ?  null : fc;
+                    }
+                    catch(Exception v)
+                    {
+                        //fc = null;
+                    }
+
+                    if (fc == null)
+                        values.Add(iuvr.Value[j]);
+                }
+
+                foreach (string v in values)
+                {
+                    iuvr.RemoveValue(v);
+                }
+
+                if (iuvr.ValueCount > 0)
+                {
+                    IGeoFeatureLayer igd_dest = (IGeoFeatureLayer)ifl;
+                    igd_dest.Renderer = (IFeatureRenderer)iuvr;
+
+                    ArcMap.Document.ActiveView.ContentsChanged();
+                    ArcMap.Document.UpdateContents();
+                    ArcMap.Document.ActiveView.PartialRefresh(esriViewDrawPhase.esriViewGeography, null, null);
+                }
+                else
+                {
+                    System.Windows.Forms.MessageBox.Show("No unique values other than null or blank found. No changes will be made to the symbology");
+                    return;
+                }
+                //ArcMap.Document.CurrentContentsView.Deactivate();
+                //ArcMap.Document.ContentsView[0].Activate(ArcMap.Application.hWnd, ArcMap.Document);
+            }
+            catch (Exception e)
+            {
+            }
+#if false
             if (dslc.IsGPBusy)
             {
                 System.Windows.Forms.MessageBox.Show("Symbolization in progress. Please wait until complete before restarting.");
@@ -192,6 +280,7 @@ namespace GAWetlands
             {
                 if(layerFile != null) layerFile.Close();
             }
+#endif
         }
 
         static void gp_ProgressChanged(object sender, ESRI.ArcGIS.Geoprocessor.ProgressChangedEventArgs e)
@@ -348,6 +437,38 @@ namespace GAWetlands
             QueryForm qf = new QueryForm();
             qf.Show();
             base.OnClick();
+        }
+    }
+
+    public class BtnSymbolize_Landscape : BtnSymbolize_Base
+    {
+        protected override void OnClick()
+        {
+            doSymbolize("Landscape");
+        }
+    }
+
+    public class BtnSymbolize_Landform : BtnSymbolize_Base
+    {
+        protected override void OnClick()
+        {
+            doSymbolize("Landform");
+        }
+    }
+
+    public class BtnSymbolize_Waterform : BtnSymbolize_Base
+    {
+        protected override void OnClick()
+        {
+            doSymbolize("Waterform");
+        }
+    }
+
+    public class BtnSymbolize_Waterbody : BtnSymbolize_Base
+    {
+        protected override void OnClick()
+        {
+            doSymbolize("Waterbody");
         }
     }
 }
