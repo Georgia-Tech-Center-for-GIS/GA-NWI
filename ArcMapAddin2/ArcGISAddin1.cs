@@ -161,11 +161,14 @@ namespace GAWetlands
                 }
 
                 if (tbl == null)
+                {
                     gp.ExecuteAsync((IGPProcess)stats);
+                }
                 else
                 {
                     ProcessResult();
                 }
+
                 /*ISQLSyntax sql = (ISQLSyntax)iw;
 
                 string prefix = sql.GetSpecialCharacter(esriSQLSpecialCharacters.esriSQL_DelimitedIdentifierPrefix);
@@ -179,117 +182,6 @@ namespace GAWetlands
                 dslc.symbType = symbType;
                 dslc.RunWorkerCompleted +=new RunWorkerCompletedEventHandler(dslc_RunWorkerCompleted);
                 dslc.RunWorkerAsync(csr);*/
-#if false
-
-                dslc.hsToRemove.Clear();
-
-                for (int index = 0; index < dslc.urvl.ValueCount; index++)
-                {
-                    dslc.hsToRemove.Add(dslc.urvl.Value[index]);
-                }
-
-                dslc.csr = csr;
-                dslc.symbType = symbType;
-
-                IFeature feature = null;
-                int pos = csr.Fields.FindField(symbType);
-
-                if (pos == -1) //
-                    return;
-
-                while ((feature = csr.NextFeature()) != null)
-                {
-                    dslc.hsToRemove.Remove((string)feature.get_Value(pos));
-
-                    stepProgressor.Step();
-
-                    if (stepProgressor.Position == stepProgressor.MaxRange)
-                    {
-                        stepProgressor.Position = stepProgressor.MinRange;
-                    }
-
-                    if (dslc.hsToRemove.Count == 0)
-                    {
-                        break;
-                    }
-                }
-
-                IUniqueValueRenderer urvl = dslc.urvl;
-
-                foreach (string h in dslc.hsToRemove)
-                {
-                    urvl.RemoveValue(h);
-                }
-
-
-                IGeoFeatureLayer igfl_lyr = (IGeoFeatureLayer)ifl;
-                igfl_lyr.Renderer = (IFeatureRenderer)urvl;
-
-                progressDialog2.HideDialog();
-
-                ArcMap.Document.ActiveView.ContentsChanged();
-                ArcMap.Document.ActiveView.PartialRefresh(esriViewDrawPhase.esriViewGeography, null, null);
-#endif
-#if false
-                IQueryDef2 iqd = (IQueryDef2) ws.CreateQueryDef();
-                iqd.PrefixClause = "DISTINCT";
-                iqd.WhereClause = "1=1";
-                iqd.SubFields = ifl.FeatureClass.OIDFieldName + "," + ifl.FeatureClass.ShapeFieldName + "," + symbType;
-                iqd.Tables = ifl.Name;
-
-                {
-                    IDataStatistics ids = new DataStatisticsClass();
-                    ids.Field = symbType;
-                    ids.Cursor = csr;
-
-                    IEnumerator iem = null;
-
-                    try
-                    {
-                        iem = ids.UniqueValues;
-                    }
-                    catch
-                    {
-                    }
-
-                    if (ids.UniqueValueCount > 0)
-                    {
-                        while (iem.MoveNext())
-                        {
-                            object val = iem.Current;
-
-                            if (val != null && ((string)val).Trim() != "")
-                                hs.Add(val.ToString());
-                        }
-                    }
-
-                    IRow rw = null;
-
-                    int index = csr.Fields.FindField(symbType);
-                    while ((rw = csr.NextRow()) != null)
-                    {
-                        rw.get_Value(index);
-                    }
-
-                    if (hs.Count == 0)
-                    {
-                        System.Windows.Forms.MessageBox.Show("No unique values other than null or blank found. No changes will be made to the symbology");
-                        return;
-                    }
-
-                    for (int j = 0; j < urvl.ValueCount; j++)
-                    {
-                        string a = urvl.get_Value(j);
-                        if (a == null) continue;
-
-                        if (!hs.Contains(a))
-                            urvl.RemoveValue(a);
-                    }
-                }
-#endif
-
-                //ArcMap.Document.CurrentContentsView.Refresh(null);
-                //ArcMap.Document.ActiveView.Refresh();
             }
             catch (System.Exception err)
             {
@@ -310,19 +202,28 @@ namespace GAWetlands
 
         static void gp_ToolExecuted(object sender, ToolExecutedEventArgs e)
         {
-            try {
-                IGeoProcessorResult igpr = e.GPResult;
+            IGeoProcessorResult igpr = null;
 
-                if (igpr.Status == esriJobStatus.esriJobSucceeded)
+            try
+            {
+                igpr = e.GPResult;
+
+                if (igpr.Status == esriJobStatus.esriJobSucceeded && dslc.IsGPBusy)
                 {
+                    if (igpr.Status == esriJobStatus.esriJobFailed || igpr.Status == esriJobStatus.esriJobSucceeded ||
+                        igpr.Status == esriJobStatus.esriJobTimedOut)
+                    {
+                        dslc.IsGPBusy = false;
+                    }
+
                     ProcessResult();
                 }
 
-                if (igpr.Status == esriJobStatus.esriJobFailed || igpr.Status == esriJobStatus.esriJobSucceeded ||
-                    igpr.Status == esriJobStatus.esriJobTimedOut)
-                {
-                    dslc.IsGPBusy = false;
-                }
+                ArcMap.Document.ActiveView.ContentsChanged();
+                ArcMap.Document.ActiveView.PartialRefresh(esriViewDrawPhase.esriViewGeography, null, null);
+
+                //ArcMap.Document.CurrentContentsView.Deactivate();
+                //ArcMap.Document.ContentsView[0].Activate(ArcMap.Application.hWnd, ArcMap.Document);
             }
             catch(Exception err) {
             }
@@ -368,14 +269,11 @@ namespace GAWetlands
                     urvl.RemoveValue(a);
             }
 
+            urvl.UseDefaultSymbol = false;
+            urvl.set_Field(0, dslc.symbType);
+
             IGeoFeatureLayer igd_dest = (IGeoFeatureLayer)srcLayer;
             igd_dest.Renderer = (IFeatureRenderer)urvl;
-
-            ArcMap.Document.CurrentContentsView.Deactivate();
-            ArcMap.Document.ContentsView[0].Activate(ArcMap.Application.hWnd, ArcMap.Document);
-
-            ArcMap.Document.ActiveView.ContentsChanged();
-            ArcMap.Document.ActiveView.PartialRefresh(esriViewDrawPhase.esriViewGeography, null, null);
         }
 
         private static string GetAssemblyPath()
