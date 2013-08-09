@@ -1,10 +1,12 @@
 C:\Documents and Settings\gtg221h\My Documents\Visual Studio 2010\Projects\ArcMapAddin2\ArcMapAddin2\bin\Debug\GAWetlands.dll
 C:\Documents and Settings\gtg221h\My Documents\Visual Studio 2010\Projects\ArcMapAddin2\ArcMapAddin2\bin\Debug\GAWetlands.pdb
 C:\Documents and Settings\gtg221h\My Documents\Visual Studio 2010\Projects\ArcMapAddin2\ArcMapAddin2\obj\Debug\ResolveAssemblyReference.cache
-C:\Documents and Settings\gtg221h\My Documents\Visual Studio 2010\Projects\ArcMapAddin2\ArcMapAddin2\obj\Debug\GAWetlands.QueryForm.resources
 C:\Documents and Settings\gtg221h\My Documents\Visual Studio 2010\Projects\ArcMapAddin2\ArcMapAddin2\obj\Debug\GenerateResource-ResGen.read.1.tlog
 C:\Documents and Settings\gtg221h\My Documents\Visual Studio 2010\Projects\ArcMapAddin2\ArcMapAddin2\obj\Debug\GenerateResource-ResGen.write.1.tlog
 C:\Documents and Settings\gtg221h\My Documents\Visual Studio 2010\Projects\ArcMapAddin2\ArcMapAddin2\obj\Debug\GAWetlands.dll
 C:\Documents and Settings\gtg221h\My Documents\Visual Studio 2010\Projects\ArcMapAddin2\ArcMapAddin2\obj\Debug\GAWetlands.pdb
 C:\Documents and Settings\gtg221h\my documents\visual studio 2010\Projects\ArcMapAddin2\ArcMapAddin2\obj\Debug\GAWetlands.Form2.resources
+C:\Documents and Settings\gtg221h\my documents\visual studio 2010\Projects\ArcMapAddin2\ArcMapAddin2\obj\Debug\GAWetlands.NWIQuery.resources
+C:\Documents and Settings\gtg221h\my documents\visual studio 2010\Projects\ArcMapAddin2\ArcMapAddin2\obj\Debug\GAWetlands.NWIPlusQuery.resources
+C:\Documents and Settings\gtg221h\my documents\visual studio 2010\Projects\ArcMapAddin2\ArcMapAddin2\obj\Debug\GAWetlands.SymbolizeByDialog.resources
 C:\Documents and Settings\gtg221h\my documents\visual studio 2010\Projects\ArcMapAddin2\ArcMapAddin2\bin\Debug\GAWetlands.esriAddIn

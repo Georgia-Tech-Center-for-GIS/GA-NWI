@@ -134,9 +134,21 @@
     <Compile Include="Form2.Designer.cs">
       <DependentUpon>Form2.cs</DependentUpon>
     </Compile>
+    <Compile Include="NWIPlusQuery.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NWIPlusQuery.Designer.cs">
+      <DependentUpon>NWIPlusQuery.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryHelperClasses.cs" />
     <Compile Include="StatsHelperClasses.cs" />
+    <Compile Include="SymbolizeByDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SymbolizeByDialog.Designer.cs">
+      <DependentUpon>SymbolizeByDialog.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AddInContent Include="Config.esriaddinx">
@@ -241,6 +253,12 @@
     <EmbeddedResource Include="Form2.resx">
       <DependentUpon>Form2.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="NWIPlusQuery.resx">
+      <DependentUpon>NWIPlusQuery.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SymbolizeByDialog.resx">
+      <DependentUpon>SymbolizeByDialog.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <AddInContent Include="Images\sigma.png">
@@ -265,16 +283,66 @@
     </AddInContent>
   </ItemGroup>
   <ItemGroup>
-    <AddInContent Include="Install\Symbology\Landform_Polygon.lyr">
+    <AddInContent Include="Install\Symbology\LLWW_Landform_Polygon.lyr">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </AddInContent>
-    <AddInContent Include="Install\Symbology\Landscape_Polygon.lyr">
+    <AddInContent Include="Install\Symbology\LLWW_Landscape_Polygon.lyr">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </AddInContent>
-    <AddInContent Include="Install\Symbology\Waterbody_Polygon.lyr">
+    <AddInContent Include="Install\Symbology\LLWW_Waterbody_Polygon.lyr">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </AddInContent>
-    <AddInContent Include="Install\Symbology\WaterFlow_Polygon.lyr">
+    <AddInContent Include="Install\Symbology\LLWW_WaterFlow_Polygon.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Images\BtnSymbolize_Water_Plus.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Images\sigma_plus.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Install\Symbology\LLWW_Landform_PolygonModifierCoastal.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+    <AddInContent Include="Install\Symbology\LLWW_Landform_PolygonModifierInland.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+    <AddInContent Include="Install\Symbology\LLWW_Landscape_PolygonModifierEstuary.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+    <AddInContent Include="Install\Symbology\LLWW_Landscape_PolygonModifierLentic.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+    <AddInContent Include="Install\Symbology\LLWW_Landscape_PolygonModifierLotic.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+    <AddInContent Include="Install\Symbology\LLWW_Waterbody_PolygonModifierEstuary.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+    <AddInContent Include="Install\Symbology\LLWW_Waterbody_PolygonModifierLake.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+    <AddInContent Include="Install\Symbology\LLWW_Waterbody_PolygonModifierOceanBay.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+    <AddInContent Include="Install\Symbology\LLWW_Waterbody_PolygonModifierPond.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+    <AddInContent Include="Install\Symbology\LLWW_Waterbody_PolygonModifierRiver.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+    <AddInContent Include="Install\Symbology\LLWW_Waterbody_PolygonModifierStream.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Install\Symbology\LLWW_Rated_Polygon.lyr">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </AddInContent>
   </ItemGroup>

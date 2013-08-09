@@ -6,39 +6,32 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-
 using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.Geometry;
-using ESRI.ArcGIS.esriSystem;
-using ESRI.ArcGIS.Geoprocessing;
 
 namespace GAWetlands
 {
-    public partial class NWIQuery : Form
+    public partial class NWIPlusQuery : Form
     {
-        private string[] tags = { "System", "Subsystem", "Class1", "Subclass", "Water1", "Special1", "Chem", "Soil", "GAPlanning" };
+        private string[] tags = { "Landscape", "Landform", "Waterflow", "Waterbody", "Landscape+", "Landform+", "Waterbody+" };
         private string selectedRadio = "";
 
         private QueryHelperClass qhc = new QueryHelperClass();
 
         RadioButton[] rbs;
 
-        public NWIQuery()
+        public NWIPlusQuery()
         {
             InitializeComponent();
             rbs = new RadioButton[]
-                { radioButton1, radioButton2, radioButton3, radioButton4, radioButton5, radioButton6, radioButton7, radioButton8, radioButton9};
+                { radioButton1, radioButton2, radioButton3, radioButton4};
 
             for (int i = 0; i < rbs.Length; i ++)
             {
                 rbs[i].Tag = i;
                 rbs[i].CheckedChanged += new EventHandler(QueryForm_CheckedChanged);
             }
-        }
-
-        void QueryForm_Load(object sender, EventArgs e)
-        {
         }
 
         void QueryForm_CheckedChanged(object sender, EventArgs e)
@@ -54,17 +47,16 @@ namespace GAWetlands
                 {
                     selectedRadio = tags[(int)btn.Tag];
 
-                    switch (selectedRadio)
+                    if (selectedRadio.Contains('+'))
                     {
-                        case "Subsystem":
-                            qhc = new QueryHelperSubsystem(); break;
-                        case "Subclass":
-                            qhc = new QueryHelperSubclass(); break;
-                        default:
-                            qhc = new QueryHelperClass(); break;
-                    };
-
-                    listBox2.Items.AddRange( qhc.getQueryValueOptions(selectedRadio) );
+                        //qhc = new QueryHelperLLWW_Modifier();
+                        //listBox2.Items.AddRange(qhc.getQueryValueOptions("Landscape"));
+                    }
+                    else
+                    {
+                        qhc = new QueryHelperLLWW();
+                        listBox2.Items.AddRange(qhc.getQueryValueOptions(selectedRadio));
+                    }
                 }
                 catch (Exception err)
                 {
@@ -76,7 +68,17 @@ namespace GAWetlands
             }
         }
 
-        protected void DoQuery(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e)
+        {
+            CalcAllValues.DoCalculation((IFeatureLayer)ArcMap.Document.SelectedLayer);
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            CommonQueryForm.ExportGridControlContentsExcel(dataGridView1);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
         {
             var i = ArcMap.Document.ActiveView;
             dataGridView1.Rows.Clear();
@@ -101,53 +103,14 @@ namespace GAWetlands
             }
         }
 
-        protected void QueryForm_Click(object sender, EventArgs e)
+        protected void ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            try
+            if (progressBar1.Value == progressBar1.Maximum)
             {
-                ToolStripItem tsi = (ToolStripItem)sender;
-
-                ContextMenuStrip cms = (ContextMenuStrip)tsi.Owner;
-                StatHelperClass shc = (StatHelperClass) ((object[])cms.Tag) [0];
-                int colIndex = (int)((object[])cms.Tag)[1];
-
-                if (shc.DoConversion(tsi.Text))
-                {
-                    for (int i = 3; i < 8; i++)
-                    {
-                        double value = double.NaN;
-                        switch (i)
-                        {
-                            case StatHelperClass.SumIndex:
-                                value = shc.sum;
-                                break;
-
-                            case StatHelperClass.MinIndex:
-                                value = shc.min;
-                                break;
-
-                            case StatHelperClass.MaxIndex:
-                                value = shc.max;
-                                break;
-
-                            case StatHelperClass.MeanIndex:
-                                value = shc.mean;
-                                break;
-                        }
-
-                        dataGridView1[colIndex, i].Value = value;
-                    }
-
-                    dataGridView1[colIndex, StatHelperClass.RangeIndex].Value = shc.range;
-                    dataGridView1[colIndex, 1].Value = tsi.Text;
-                }
+                progressBar1.Value = progressBar1.Minimum;
             }
-            catch (Exception err)
-            {
-            }
-            finally
-            {
-            }
+
+            progressBar1.Increment(1);
         }
 
         protected int EnsureColumnsInDataGrid(StatHelperClass shc)
@@ -160,7 +123,8 @@ namespace GAWetlands
 
             string col = shc.GetColumnHeadings();
 
-            if(dataGridView1.Columns.Contains(col)) {
+            if (dataGridView1.Columns.Contains(col))
+            {
                 return dataGridView1.Columns[col].Index;
             }
 
@@ -171,16 +135,6 @@ namespace GAWetlands
             dvc.CellTemplate = new DataGridViewTextBoxCell();
             dvc.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             return dataGridView1.Columns.Add(dvc);
-        }
-
-        protected void button1_Click(object sender, EventArgs e)
-        {
-            CalcAllValues.DoCalculation((IFeatureLayer) ArcMap.Document.SelectedLayer);
-        }
-
-        protected void button3_Click(object sender, EventArgs e)
-        {
-            CommonQueryForm.ExportGridControlContentsExcel(dataGridView1);
         }
 
         protected void DoWork(object sender, DoWorkEventArgs e)
@@ -204,7 +158,6 @@ namespace GAWetlands
                 IRow rw = null;
 
                 List<StatHelperClass> shc = new List<StatHelperClass>();
-                IFeature feat = null;
 
                 if (csr != null)
                 {
@@ -282,14 +235,53 @@ namespace GAWetlands
             }
         }
 
-        protected void ProgressChanged(object sender, ProgressChangedEventArgs e)
+        protected void QueryForm_Click(object sender, EventArgs e)
         {
-            if (progressBar1.Value == progressBar1.Maximum)
+            try
             {
-                progressBar1.Value = progressBar1.Minimum;
-            }
+                ToolStripItem tsi = (ToolStripItem)sender;
 
-            progressBar1.Increment(1);
+                ContextMenuStrip cms = (ContextMenuStrip)tsi.Owner;
+                StatHelperClass shc = (StatHelperClass)((object[])cms.Tag)[0];
+                int colIndex = (int)((object[])cms.Tag)[1];
+
+                if (shc.DoConversion(tsi.Text))
+                {
+                    for (int i = 3; i < 8; i++)
+                    {
+                        double value = double.NaN;
+                        switch (i)
+                        {
+                            case StatHelperClass.SumIndex:
+                                value = shc.sum;
+                                break;
+
+                            case StatHelperClass.MinIndex:
+                                value = shc.min;
+                                break;
+
+                            case StatHelperClass.MaxIndex:
+                                value = shc.max;
+                                break;
+
+                            case StatHelperClass.MeanIndex:
+                                value = shc.mean;
+                                break;
+                        }
+
+                        dataGridView1[colIndex, i].Value = value;
+                    }
+
+                    dataGridView1[colIndex, StatHelperClass.RangeIndex].Value = shc.range;
+                    dataGridView1[colIndex, 1].Value = tsi.Text;
+                }
+            }
+            catch (Exception err)
+            {
+            }
+            finally
+            {
+            }
         }
 
         protected void Completed(object sender, RunWorkerCompletedEventArgs e)
@@ -342,129 +334,6 @@ namespace GAWetlands
                         dataGridView1.Rows.Add(new object[] { "Range", shc[j].range });                                        //7
                     }
                 }
-            }
-        }
-    }
-
-    class CalcAllValues
-    {
-        public static void DoCalculation(IFeatureLayer ifl_active)
-        {
-            System.IO.StreamWriter sw = new System.IO.StreamWriter("C:\\Log.txt");
-            List<StatHelperClass> shc = new List<StatHelperClass>();
-
-            try {
-                if (ifl_active == null)
-                {
-                    System.Windows.Forms.MessageBox.Show("Select a layer before continuing.");
-                    return;
-                }
-
-                IQueryFilter iqf = new QueryFilterClass();
-                iqf.WhereClause = "1=1";
-
-                int featureCount = ifl_active.FeatureClass.FeatureCount(iqf);
-
-
-                if (System.Windows.Forms.MessageBox.Show("This will (p)re-calculate areas for ALL " + featureCount + " features in the selected layer. Proceed?", "", MessageBoxButtons.YesNo).Equals(DialogResult.No))
-                {
-                    return;
-                }
-
-                sw.WriteLine("Started Query at " + System.DateTime.Now);
-                IWorkspace ws = ((IDataset)ArcMap.Document.ActiveView.FocusMap.Layer[0]).Workspace;
-                IWorkspaceEdit iwe = (IWorkspaceEdit)ws;
-
-                IFeature feat = null;
-
-                if (ifl_active.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolygon)
-                {
-                    shc.Add(new PolygonArea_HelperClass());
-                    shc.Add(new PolygonPerimeter_HelperClass());
-                }
-                else if (ifl_active.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolyline)
-                {
-                    shc.Add(new PolylineHelperClass());
-                }
-
-                IFeatureCursor csr = ifl_active.FeatureClass.Update(iqf, false);
-
-                feat = csr.NextFeature();
-
-                for(int i = 0; i < shc.Count; i++)
-                    shc[i].SearchForFields((ITable)ifl_active);
-                
-                do
-                {
-                    for (int i = 0; i < shc.Count; i++)
-                    {
-                        shc[i].doReCalcValues = true;
-                        shc[i].ProcessFeature(iwe, ifl_active, (IRow)feat);
-                    }
-
-                    csr.UpdateFeature(feat);
-                }
-                while ((feat = csr.NextFeature()) != null);
-            }
-            catch (Exception e)
-            {
-            }
-            finally
-            {
-                sw.WriteLine("Finished Calculation at " + System.DateTime.Now);
-                sw.Close();
-
-                try
-                {
-                    Form2 f2 = new Form2();
-                    f2.shc = shc;
-                    f2.ShowDialog();
-                }
-                catch (Exception e)
-                {
-                }
-            }
-        }
-    }
-    public class CommonQueryForm
-    {
-        public static void ExportGridControlContentsExcel(DataGridView dataGridView1)
-        {
-            try
-            {
-                Microsoft.Office.Interop.Excel._Application app = new Microsoft.Office.Interop.Excel.Application();
-                Microsoft.Office.Interop.Excel._Workbook workbook = app.Workbooks.Add(Type.Missing);
-
-                // creating new Excelsheet in workbook
-                Microsoft.Office.Interop.Excel._Worksheet worksheet = null;
-
-                // see the excel sheet behind the program
-                app.Visible = true;
-
-                // get the reference of first sheet. By default its name is Sheet1.
-                // store its reference to worksheet
-                worksheet = (Microsoft.Office.Interop.Excel._Worksheet)workbook.ActiveSheet;
-
-                // changing the name of active sheet
-                worksheet.Name = "Exported from GA NWI Tools";
-
-                // storing header part in Excel
-                for (int i = 1; i < dataGridView1.Columns.Count + 1; i++)
-                {
-                    worksheet.Cells[1, i] = dataGridView1.Columns[i - 1].HeaderText;
-                }
-
-                // storing Each row and column value to excel sheet
-                for (int i = 0; i < dataGridView1.Rows.Count - 1; i++)
-                {
-                    for (int j = 0; j < dataGridView1.Columns.Count; j++)
-                    {
-                        worksheet.Cells[i + 2, j + 1] = dataGridView1.Rows[i].Cells[j].Value; //.ToString();
-                    }
-                }
-            }
-            catch (Exception err)
-            {
             }
         }
     }

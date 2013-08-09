@@ -15,12 +15,14 @@
       <Toolbars>
         <Toolbar id="Wetlands_Georgia_Wetlands" caption="Georgia Wetlands" showInitially="true" >
           <Items>
-            <Button refID="BtnSymbolize_System"></Button>
+            <!--Button refID="BtnSymbolize_System"></Button>
             <Button refID="BtnSymbolize_Class"></Button>
             <Button refID="BtnSymbolize_Regime"></Button>
             <Button refID="BtnSymbolize_Special"></Button>
             <Button refID="BtnSymbolize_Chemistry"></Button>
-            <Button refID="BtnSymbolize_Soil"></Button>
+            <Button refID="BtnSymbolize_Soil"></Button -->
+
+            <Button refID="BtnSymbolize_Universal"></Button>
 
             <Button refID="BtnQuery_All"></Button>
 
@@ -31,12 +33,13 @@
 
         <Toolbar id="Wetlands_Georgia_Plus" caption="Georgia Wetlands NWI Plus" showInitially="true" >
           <Items>
-            <Button refID="BtnSymbolize_Landform"></Button>
+            <!--Button refID="BtnSymbolize_Landform"></Button>
             <Button refID="BtnSymbolize_Landscape"></Button>
-            <Button refID="BtnSymbolize_Waterflow"></Button>
-            <Button refID="BtnSymbolize_Waterbody"></Button>
+            <Button refID="BtnSymbolize_Waterflow"></Button-->
+            
+            <Button refID="BtnSymbolize_Universal"></Button>
 
-            <Button refID="BtnQuery_All"></Button>
+            <Button refID="BtnQuery_NWIPlus"></Button>
 
             <Tool refID="BtnClipByPolygon"></Tool>
             <Tool refID="BtnClipByRadius"></Tool>
@@ -45,7 +48,7 @@
 
       </Toolbars>
       <Commands>
-        <Button id="BtnSymbolize_System"    class="BtnSymbolize_System"     message="." caption="Symbolize by System" tip="Symbolize by System." category="NWI" onDemand="false"                         image="Images\BtnSymbolize_System.png"/>
+        <!--Button id="BtnSymbolize_System"    class="BtnSymbolize_System"     message="." caption="Symbolize by System" tip="Symbolize by System." category="NWI" onDemand="false"                         image="Images\BtnSymbolize_System.png"/>
         <Button id="BtnSymbolize_Class"     class="BtnSymbolize_Class"      message="." caption="Symbolize by Class" tip="Symbolize by Class." category="NWI" onDemand="false"                           image="Images\BtnSymbolize_Class.png"/>
         <Button id="BtnSymbolize_Regime"    class="BtnSymbolize_Regime"     message="." caption="Symbolize by Water Regime" tip="Symbolize by Water Regime." category="NWI" onDemand="false"             image="Images\BtnSymbolize_Water.png"/>
         <Button id="BtnSymbolize_Special"   class="BtnSymbolize_Special"    message="." caption="Symbolize by Special Modifier" tip="Symbolize by Special Modifier." category="NWI" onDemand="false"     image="Images\BtnSymbolize_Special.png"/>
@@ -55,9 +58,12 @@
         <Button id="BtnSymbolize_Landscape" class="BtnSymbolize_Landscape"  message="." caption="Symbolize by Landscape" tip="Symbolize by Landscape" category="NWI Plus" onDemand="false"></Button>
         <Button id="BtnSymbolize_Landform"  class="BtnSymbolize_Landform"  message="."  caption="Symbolize by Landform" tip="Symbolize by Landscape" category="NWI Plus" onDemand="false"></Button>
         <Button id="BtnSymbolize_Waterform"  class="BtnSymbolize_Waterform"  message="."  caption="Symbolize by Waterflow" tip="Symbolize by Landscape" category="NWI Plus" onDemand="false"></Button>
-        <Button id="BtnSymbolize_Waterbody"  class="BtnSymbolize_Waterbody"  message="."  caption="Symbolize by Waterbody" tip="Symbolize by Landscape" category="NWI Plus" onDemand="false"></Button>
+        <Button id="BtnSymbolize_Waterbody"  class="BtnSymbolize_Waterbody"  message="."  caption="Symbolize by Waterbody" tip="Symbolize by Landscape" category="NWI Plus" onDemand="false"             image="Images\BtnSymbolize_Water_Plus.png"></Button-->
+
+        <Button id="BtnSymbolize_Universal"  class ="BtnSymbolize_Universal" message="."  caption="Symbolize by predefined NWI/NWI+ layer symbology." tip="Symbolize by NWI/NWI+" category="NWI" onDemand="false" image="Images\BtnSymbolize_Water_Plus.png"></Button>
 
         <Button id="BtnQuery_All"           class="BtnQueryAll"             message="." caption="Perform queries on an NWI layer." category="NWI" image="Images\sigma.png" />
+        <Button id="BtnQuery_NWIPlus"       class="BtnQueryNWIPlus"         message="." caption="Perform queries on an NWI-plus layer." category="NWI" image="Images\sigma_plus.png" />
 
         <Tool id="BtnClipByPolygon"         class="ClipNWIByPolygon"        message="." caption="Clip NWI by polygon" category="NWI"/>
         <Tool id="BtnClipByRadius"          class="ClipNWIByRadius"        message="." caption="Clip NWI by radius from selected point." category="NWI"/>

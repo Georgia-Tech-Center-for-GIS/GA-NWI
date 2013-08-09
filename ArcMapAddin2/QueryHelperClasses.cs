@@ -230,17 +230,88 @@ namespace GAWetlands
         }
     }
 
-    class QueryHelperGAPlanning : QueryHelperClass
+    class QueryHelperLLWW : QueryHelperClass
     {
-        public override string[] getQueryValueOptions(string queryType)
+        public string[] getQueryValueOptions(string queryType, string fileSuffix)
         {
-            return new string[] { "Open Water (OW)", "Non-forested Emergent (EM)", "Scrub/Shrub (SS)", "Forested (FO)", "Altered (f)", "All GA Planning Wetlands" };
-            //return base.getQueryValueOptions(queryType);
+            ESRI.ArcGIS.Carto.ILayerFile layerFile = new LayerFileClass();
+            //layerFile.Open("\\\\tornado\\Research3\\Tony\\Wetlands\\wetlands10.1\\10.0\\" + queryType + "_Poly.lyr");
+            layerFile.Open(GetAssemblyPath() + "\\Symbology\\LLWWW_" + queryType + "_Polygon"+ fileSuffix +".lyr");
+
+            IGeoFeatureLayer igfl_lyr = (IGeoFeatureLayer)layerFile.Layer;
+            IUniqueValueRenderer iuvr = (IUniqueValueRenderer)igfl_lyr.Renderer;
+
+            string[] s = new string[iuvr.ValueCount];
+
+            for (int j = 0; j < iuvr.ValueCount; j++)
+            {
+                s[j] = iuvr.Label[iuvr.Value[j]] + " (" + iuvr.Value[j] + ")";
+            }
+
+            return s;
         }
 
         public override IQueryFilter getQueryFilter(string field, string[] values)
         {
-            return base.getQueryFilter("Class1", values);
+            return base.getQueryFilter(field, values);
         }
+
+        public override string[] getQueryValues(ListBox lb)
+        {
+            return base.getQueryValues(lb);
+        }
+    }
+
+    class QueryHelperLLWW_Modifier : QueryHelperLLWW
+    {
+        private IUniqueValueRenderer iuvr = null;
+
+        public string[] getQueryValueOptions_withSuffix(string queryType, string fileSuffix)
+        {
+            ESRI.ArcGIS.Carto.ILayerFile layerFile = new LayerFileClass();
+            //layerFile.Open("\\\\tornado\\Research3\\Tony\\Wetlands\\wetlands10.1\\10.0\\" + queryType + "_Poly.lyr");
+            layerFile.Open(GetAssemblyPath() + "\\Symbology\\LLWWW_" + queryType + "_Polygon" + fileSuffix + ".lyr");
+
+            IGeoFeatureLayer igfl_lyr = (IGeoFeatureLayer)layerFile.Layer;
+            iuvr = (IUniqueValueRenderer)igfl_lyr.Renderer;
+
+            string[] s = new string[iuvr.ValueCount];
+
+            for (int j = 0; j < iuvr.ValueCount; j++)
+            {
+                s[j] = iuvr.Label[iuvr.Value[j]] + " (" + iuvr.Value[j] + ")";
+            }
+
+            return s;
+        }
+
+        public override IQueryFilter getQueryFilter(string field, string[] values)
+        {
+            return base.getQueryFilter(field, values);
+        }
+
+        public override string[] getQueryValues(ListBox lb)
+        {
+            string[] values = new string[iuvr.ValueCount];
+
+            char[] delimiter = { iuvr.FieldDelimiter[0] };
+
+            for (int j = 0; j < iuvr.ValueCount; j++)
+            {
+                values[j] = iuvr.Label[ iuvr.Value[j] ] + " (" + iuvr.Value[j] + ")";
+
+/*
+                string[] currValues = iuvr.Value[j].Split(delimiter);
+
+                for (int k = 0; k < currValues.Length; k++)
+                {
+                }
+
+*/
+            }
+
+            return values;
+        }
+
     }
 }

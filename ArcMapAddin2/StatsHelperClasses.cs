@@ -239,13 +239,8 @@ namespace GAWetlands
             return fclass.FindField(Name);
         }
 
-        public void ProcessFeature(IRow rw)
+        public void ProcessFeature(IWorkspaceEdit iwe, IFeatureLayer ifl_active, IRow rw)
         {
-            IWorkspaceEdit iwe = null;
-            IFeatureLayer ifl_active = (IFeatureLayer)ArcMap.Document.SelectedLayer;
-            IWorkspace ws = ((IDataset)ArcMap.Document.ActiveView.FocusMap.Layer[0]).Workspace;
-            iwe = (IWorkspaceEdit)ws;
-
             double value = double.NaN;
 
             if (this.LinearUnit == null || this.LinearUnit == "")
