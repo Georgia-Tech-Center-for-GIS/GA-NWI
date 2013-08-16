@@ -252,6 +252,7 @@
             this.Controls.Add(this.groupBox1);
             this.Name = "NWIPlusQuery";
             this.Text = "NWIPlusQuery";
+            this.TopMost = true;
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

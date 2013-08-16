@@ -12,14 +12,18 @@ using ESRI.ArcGIS.DataSourcesGDB;
 using ESRI.ArcGIS.Geoprocessor;
 using ESRI.ArcGIS.Geoprocessing;
 using ESRI.ArcGIS.SystemUI;
+using ESRI.ArcGIS.CatalogUI;
+using ESRI.ArcGIS.Catalog;
 
 namespace GAWetlands
 {
     class ClipNWI : ESRI.ArcGIS.Desktop.AddIns.Tool {
-        protected void DoClip(IActiveView activeView, IGeometry geometry)
-        {
-            Geoprocessor gp = new Geoprocessor();
+        IGPUtilities igpu = new GPUtilitiesClass();
+        IGxDialog gd = new GxDialogClass();
+        Geoprocessor gp = new Geoprocessor();
 
+        protected void DoClip(IActiveView activeView, IGeometry geometry)
+        {           
             try
             {
                 ESRI.ArcGIS.Carto.IMap map = activeView.FocusMap;
@@ -48,9 +52,18 @@ namespace GAWetlands
 
                 //IGeometryDef igd = (IGeometryDef)ifl_active.FeatureClass;
 
-                InMemoryWorkspaceFactory wsf = new InMemoryWorkspaceFactoryClass();
-                
+                //
+                //ESRI.ArcGIS.CatalogUI.IFeatureDatasetDialog ifdd = new FeatureDatasetDialogClass();
+                //ifdd.DoModalCreate(, ArcMap.Application.hWnd);
+
+                gd.ObjectFilter = new GxFilterBasicTypesClass(); //new GxFilterFeatureClassesClass();
+                if (gd.DoModalSave(ArcMap.Application.hWnd) == false)
+                {
+                    throw new NotImplementedException();
+                }
+
                 // Create a new in-memory workspace. This returns a name object.
+                InMemoryWorkspaceFactory wsf = new InMemoryWorkspaceFactoryClass();
                 IWorkspaceName workspaceName = wsf.Create(null, "MyWorkspace", null, 0);
 
                 IName name = (IName)workspaceName;
@@ -68,7 +81,7 @@ namespace GAWetlands
                 IFeatureClass ifc_new = workspace.CreateFeatureClass("AAA", flds, null, null, esriFeatureType.esriFTSimple, ifl_active.FeatureClass.ShapeFieldName, "");
                 IFeatureBuffer fb = ifc_new.CreateFeatureBuffer();
                 IFeatureCursor csri = ifc_new.Insert(false);
-
+                
                 fb.Shape = geometry;
                 csri.InsertFeature(fb);
                 csri.Flush();
@@ -79,6 +92,7 @@ namespace GAWetlands
                 IFeatureLayer fl = new FeatureLayerClass();
                 fl.FeatureClass = ifc_new;
                 fl.Name = "IntersectingShape";
+                //fl.SpatialReference = sr;
 
                 //IFeatureClassName ifcn = new FeatureClassNameClass();
                 //ifcn.ShapeType = esriGeometryType.esriGeometryPolygon;
@@ -107,10 +121,11 @@ namespace GAWetlands
 #endif
                 //IScratchWorkspaceFactory iwf_result = new ScratchWorkspaceFactoryClass();
                 //IWorkspace ws = iwf_result.CreateNewScratchWorkspace();
-                tool.out_feature_class = /*ws.PathName*/ "In_memory" + "\\NWI_Clip_Result";
+                tool.out_feature_class = gd.FinalLocation.FullName + "\\" + gd.Name; /*ws.PathName*/ //"In_memory" + "\\NWI_Clip_Result";
 
                 gp.AddOutputsToMap = true;
                 gp.OverwriteOutput = true;
+
                 gp.ToolExecuted += new EventHandler<ToolExecutedEventArgs>(gp_ToolExecuted);
                 gp.ProgressChanged += new EventHandler<ProgressChangedEventArgs>(gp_ProgressChanged);
 
@@ -137,8 +152,9 @@ namespace GAWetlands
 
             if (igpr.Status == esriJobStatus.esriJobSucceeded)
             {
-                IGPUtilities igpu = new GPUtilitiesClass();
-                IFeatureLayer ifl_Results = (IFeatureLayer)igpu.FindMapLayer("NWI_Clip_Result");
+                try
+                {
+                    IFeatureLayer ifl_Results = (IFeatureLayer)igpu.FindMapLayer(gd.Name);
 
 #if false
                 if (ifl_Results.FeatureClass.Fields.FindField("AREA") > 0 ||
@@ -162,11 +178,20 @@ namespace GAWetlands
                     }
                 }
 #else
-                var dlg_result = System.Windows.Forms.MessageBox.Show("Re-calculate areas and perimeters? (required before query returns correct results)", "", System.Windows.Forms.MessageBoxButtons.YesNo);
-                if (dlg_result == System.Windows.Forms.DialogResult.No) return;
+                    var dlg_result = System.Windows.Forms.MessageBox.Show("Re-calculate areas and perimeters? (required before query returns correct results)", "", System.Windows.Forms.MessageBoxButtons.YesNo);
+                    if (dlg_result == System.Windows.Forms.DialogResult.No) return;
 
-                CalcAllValues.DoCalculation(ifl_Results);
+                    CalcAllValues.DoCalculation(ifl_Results);
 #endif
+                }
+                catch (Exception eeeee)
+                {
+                }
+                finally
+                {
+                    //gp.ToolExecuted -= gp_ToolExecuted;
+                    //gp.ProgressChanged -= gp_ProgressChanged;
+                }
             }
         }
 

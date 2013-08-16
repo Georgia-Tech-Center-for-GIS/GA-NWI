@@ -6,14 +6,14 @@
   <Image>Images\ArcMapAddin2.png</Image>
   <Author>gtg221h</Author>
   <Company>CGIS, Georgia Tech</Company>
-  <Date>5/24/2013</Date>
+  <Date>8/9/2013</Date>
   <Targets>
     <Target name="Desktop" version="10.0" />
   </Targets>
-  <AddIn language="CLR" library="GAWetlands.dll" namespace="GAWetlands" >
+  <AddIn language="CLR" library="GAWetlands.dll" namespace="GAWetlands">
     <ArcMap>
       <Toolbars>
-        <Toolbar id="Wetlands_Georgia_Wetlands" caption="Georgia Wetlands" showInitially="true" >
+        <Toolbar id="Wetlands_Georgia_Wetlands" caption="Georgia Wetlands" showInitially="true">
           <Items>
             <!--Button refID="BtnSymbolize_System"></Button>
             <Button refID="BtnSymbolize_Class"></Button>
@@ -21,31 +21,30 @@
             <Button refID="BtnSymbolize_Special"></Button>
             <Button refID="BtnSymbolize_Chemistry"></Button>
             <Button refID="BtnSymbolize_Soil"></Button -->
+            <!--ComboBox refID="NWIQueryComboBox"></ComboBox-->
 
             <Button refID="BtnSymbolize_Universal"></Button>
+            
+            <ToolPalette refID="Georgia_Tech_GAWetlands_My_Tool_Palette"/>
+            <ToolPalette refID="Georgia_Tech_GAWetlands_My_Tool_Query"/>
 
-            <Button refID="BtnQuery_All"></Button>
-
-            <Tool refID="BtnClipByPolygon"></Tool>
-            <Tool refID="BtnClipByRadius"></Tool>
+            <!--Tool refID="BtnClipByPolygon"></Tool>
+            <Tool refID="BtnClipByRadius"></Tool-->
+            
           </Items>
         </Toolbar>
-
-        <Toolbar id="Wetlands_Georgia_Plus" caption="Georgia Wetlands NWI Plus" showInitially="true" >
+        <!--Toolbar id="Wetlands_Georgia_Plus" caption="Georgia Wetlands NWI Plus" showInitially="true" >
           <Items>
-            <!--Button refID="BtnSymbolize_Landform"></Button>
+            <Button refID="BtnSymbolize_Landform"></Button>
             <Button refID="BtnSymbolize_Landscape"></Button>
-            <Button refID="BtnSymbolize_Waterflow"></Button-->
-            
-            <Button refID="BtnSymbolize_Universal"></Button>
+            <Button refID="BtnSymbolize_Waterflow"></Button>
 
             <Button refID="BtnQuery_NWIPlus"></Button>
 
             <Tool refID="BtnClipByPolygon"></Tool>
             <Tool refID="BtnClipByRadius"></Tool>
           </Items>
-        </Toolbar>
-
+        </Toolbar-->
       </Toolbars>
       <Commands>
         <!--Button id="BtnSymbolize_System"    class="BtnSymbolize_System"     message="." caption="Symbolize by System" tip="Symbolize by System." category="NWI" onDemand="false"                         image="Images\BtnSymbolize_System.png"/>
@@ -59,14 +58,28 @@
         <Button id="BtnSymbolize_Landform"  class="BtnSymbolize_Landform"  message="."  caption="Symbolize by Landform" tip="Symbolize by Landscape" category="NWI Plus" onDemand="false"></Button>
         <Button id="BtnSymbolize_Waterform"  class="BtnSymbolize_Waterform"  message="."  caption="Symbolize by Waterflow" tip="Symbolize by Landscape" category="NWI Plus" onDemand="false"></Button>
         <Button id="BtnSymbolize_Waterbody"  class="BtnSymbolize_Waterbody"  message="."  caption="Symbolize by Waterbody" tip="Symbolize by Landscape" category="NWI Plus" onDemand="false"             image="Images\BtnSymbolize_Water_Plus.png"></Button-->
-
-        <Button id="BtnSymbolize_Universal"  class ="BtnSymbolize_Universal" message="."  caption="Symbolize by predefined NWI/NWI+ layer symbology." tip="Symbolize by NWI/NWI+" category="NWI" onDemand="false" image="Images\BtnSymbolize_Water_Plus.png"></Button>
-
-        <Button id="BtnQuery_All"           class="BtnQueryAll"             message="." caption="Perform queries on an NWI layer." category="NWI" image="Images\sigma.png" />
-        <Button id="BtnQuery_NWIPlus"       class="BtnQueryNWIPlus"         message="." caption="Perform queries on an NWI-plus layer." category="NWI" image="Images\sigma_plus.png" />
-
-        <Tool id="BtnClipByPolygon"         class="ClipNWIByPolygon"        message="." caption="Clip NWI by polygon" category="NWI"/>
-        <Tool id="BtnClipByRadius"          class="ClipNWIByRadius"        message="." caption="Clip NWI by radius from selected point." category="NWI"/>
+        
+        <Button id="BtnSymbolize_Universal" class="BtnSymbolize_Universal" message="." caption="Symbolize by predefined NWI/NWI+ layer symbology." tip="Symbolize by NWI/NWI+" category="NWI" onDemand="false" image="Images\BtnSymbolize_Water_Plus.png"></Button>
+        
+        <Button id="BtnNWIQuery" class="BtnQueryAll" category="NWI" image="Images\sigma.png" caption="NWI (Cowardin) Query"></Button>
+        <Button id="BtnQuery_NWIPlus" class="BtnQueryNWIPlus" category="NWI" image="Images\sigma_plus.png" caption="NWI+ (LLWW) Query"></Button>
+        
+        <Tool id="BtnClipByPolygon" class="ClipNWIByPolygon" message="." caption="Clip NWI by polygon" category="NWI" />
+        <Tool id="BtnClipByRadius" class="ClipNWIByRadius" message="." caption="Clip NWI by radius from selected point." category="NWI" />
+        
+        <ToolPalette id="Georgia_Tech_GAWetlands_My_Tool_Query" caption="My Tool Palette" category="Add-In Controls" isMenuStyle="true" columns="0">
+          <Items>
+            <Button refID="BtnNWIQuery"></Button>
+            <Button refID="BtnQuery_NWIPlus"></Button>
+          </Items>
+        </ToolPalette>
+        
+        <ToolPalette id="Georgia_Tech_GAWetlands_My_Tool_Palette" caption="My Tool Palette" category="Add-In Controls" isMenuStyle="true" columns="0">
+          <Items>
+            <Tool refID="BtnClipByPolygon" />
+            <Tool refID="BtnClipByRadius" />
+          </Items>
+        </ToolPalette>
       </Commands>
     </ArcMap>
   </AddIn>

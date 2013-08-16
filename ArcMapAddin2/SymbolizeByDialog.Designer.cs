@@ -159,6 +159,7 @@
             this.Controls.Add(this.groupBox1);
             this.Name = "SymbolizeByDialog";
             this.Text = "Choose Symbology Category";
+            this.TopMost = true;
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);

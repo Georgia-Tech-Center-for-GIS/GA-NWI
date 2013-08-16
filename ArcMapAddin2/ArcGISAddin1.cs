@@ -121,7 +121,13 @@ namespace GAWetlands
         }
     }
 
-    public class BtnQueryAll : ESRI.ArcGIS.Desktop.AddIns.Button
+    public class NWIQueryButton : ESRI.ArcGIS.Desktop.AddIns.Button {
+         public void doQuery() {
+            OnClick();
+        }
+    }
+
+    public class BtnQueryAll : NWIQueryButton
     {
         protected override void OnClick()
         {
@@ -131,7 +137,7 @@ namespace GAWetlands
         }
     }
 
-    public class BtnQueryNWIPlus : ESRI.ArcGIS.Desktop.AddIns.Button
+    public class BtnQueryNWIPlus : NWIQueryButton
     {
         protected override void OnClick()
         {
