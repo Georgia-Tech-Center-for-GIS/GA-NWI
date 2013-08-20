@@ -68,6 +68,9 @@
       <SpecificVersion>False</SpecificVersion>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="ESRI.ArcGIS.DataManagementTools, Version=10.0.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="ESRI.ArcGIS.DataSourcesGDB, Version=10.0.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <EmbedInteropTypes>True</EmbedInteropTypes>
@@ -351,6 +354,14 @@
   </ItemGroup>
   <ItemGroup>
     <AddInContent Include="Install\Symbology\LLWW_Rated_Polygon.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Images\point.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+    <AddInContent Include="Images\polygon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </AddInContent>
   </ItemGroup>

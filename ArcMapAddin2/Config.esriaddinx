@@ -64,8 +64,8 @@
         <Button id="BtnNWIQuery" class="BtnQueryAll" category="NWI" image="Images\sigma.png" caption="NWI (Cowardin) Query"></Button>
         <Button id="BtnQuery_NWIPlus" class="BtnQueryNWIPlus" category="NWI" image="Images\sigma_plus.png" caption="NWI+ (LLWW) Query"></Button>
         
-        <Tool id="BtnClipByPolygon" class="ClipNWIByPolygon" message="." caption="Clip NWI by polygon" category="NWI" />
-        <Tool id="BtnClipByRadius" class="ClipNWIByRadius" message="." caption="Clip NWI by radius from selected point." category="NWI" />
+        <Tool id="BtnClipByPolygon" class="ClipNWIByPolygon" message="." caption="Clip NWI by polygon" category="NWI" image="Images\polygon.png" />
+        <Tool id="BtnClipByRadius" class="ClipNWIByRadius" message="." caption="Clip NWI by radius from selected point." category="NWI" image="Images\point.png"/>
         
         <ToolPalette id="Georgia_Tech_GAWetlands_My_Tool_Query" caption="My Tool Palette" category="Add-In Controls" isMenuStyle="true" columns="0">
           <Items>

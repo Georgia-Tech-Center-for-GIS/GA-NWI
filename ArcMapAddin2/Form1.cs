@@ -375,8 +375,6 @@ namespace GAWetlands
                 IWorkspace ws = ((IDataset)ArcMap.Document.ActiveView.FocusMap.Layer[0]).Workspace;
                 IWorkspaceEdit iwe = (IWorkspaceEdit)ws;
 
-                IFeature feat = null;
-
                 if (ifl_active.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolygon)
                 {
                     shc.Add(new PolygonArea_HelperClass());
@@ -387,14 +385,15 @@ namespace GAWetlands
                     shc.Add(new PolylineHelperClass());
                 }
 
-                IFeatureCursor csr = ifl_active.FeatureClass.Update(iqf, false);
-
-                feat = csr.NextFeature();
+                //feat = csr.NextFeature();
 
                 for(int i = 0; i < shc.Count; i++)
                     shc[i].SearchForFields((ITable)ifl_active);
-                
-                do
+
+                IFeatureCursor csr = ifl_active.FeatureClass.Update(iqf, true);
+                IFeature feat = null;
+
+                while ((feat = csr.NextFeature()) != null)
                 {
                     for (int i = 0; i < shc.Count; i++)
                     {
@@ -404,7 +403,6 @@ namespace GAWetlands
 
                     csr.UpdateFeature(feat);
                 }
-                while ((feat = csr.NextFeature()) != null);
             }
             catch (Exception e)
             {

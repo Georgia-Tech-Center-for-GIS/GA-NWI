@@ -40,26 +40,31 @@ namespace GAWetlands
                 isf.SpatialRel = esriSpatialRelEnum.esriSpatialRelIntersects;
 
                 IFeatureLayer ifl_active = (IFeatureLayer)ArcMap.Document.SelectedLayer;
-                //IGeoDataset gds = (IGeoDataset)ifl_active.FeatureClass;
-                //ISpatialReference sr = gds.SpatialReference;
-
-                //IQueryFilter iqf = qhc.getQueryFilter(selectedRadio, queryValues);
-                //IFeatureLayer2 ifl2 = (IFeatureLayer2)ArcMap.Document.SelectedLayer;
-                //IGeoFeatureLayer igfl = (IGeoFeatureLayer)ifl2;
-                //ITable tbl = (ITable)((IFeatureLayer)igfl).FeatureClass;
-                //IFeatureSelection ifs = (IFeatureSelection)igfl;
-                //ifs.SelectFeatures(isf, esriSelectionResultEnum.esriSelectionResultNew, false);
-
-                //IGeometryDef igd = (IGeometryDef)ifl_active.FeatureClass;
-
-                //
-                //ESRI.ArcGIS.CatalogUI.IFeatureDatasetDialog ifdd = new FeatureDatasetDialogClass();
-                //ifdd.DoModalCreate(, ArcMap.Application.hWnd);
 
                 gd.ObjectFilter = new GxFilterBasicTypesClass(); //new GxFilterFeatureClassesClass();
                 if (gd.DoModalSave(ArcMap.Application.hWnd) == false)
                 {
-                    throw new NotImplementedException();
+                    return;
+                }
+
+                while (System.IO.File.Exists(gd.FinalLocation.FullName + "\\" + gd.Name) || gd.ReplacingObject)
+                {
+                    if (System.Windows.Forms.MessageBox.Show("You've selected a feature class that already exists. Select a different feature class name.", "Overwrite Feature Class", System.Windows.Forms.MessageBoxButtons.RetryCancel) == System.Windows.Forms.DialogResult.Cancel)
+                    {
+                        return;
+                    }
+
+                    if (gd.DoModalSave(ArcMap.Application.hWnd) == false)
+                    {
+                        return;
+                    }
+                }
+
+                IGeoDataset igd_dest = (IGeoDataset)ifl_active.FeatureClass;
+
+                if (igd_dest.SpatialReference.Name != geometry.SpatialReference.Name)
+                {
+                    geometry.Project(igd_dest.SpatialReference);
                 }
 
                 // Create a new in-memory workspace. This returns a name object.
@@ -92,35 +97,11 @@ namespace GAWetlands
                 IFeatureLayer fl = new FeatureLayerClass();
                 fl.FeatureClass = ifc_new;
                 fl.Name = "IntersectingShape";
-                //fl.SpatialReference = sr;
 
-                //IFeatureClassName ifcn = new FeatureClassNameClass();
-                //ifcn.ShapeType = esriGeometryType.esriGeometryPolygon;
-
-#if false
-                ESRI.ArcGIS.AnalysisTools.Intersect tool = new ESRI.ArcGIS.AnalysisTools.Intersect();
-
-                IGpValueTableObject tbl = new GpValueTableObjectClass();
-                tbl.SetColumns(2);
-                object row = "";
-                object rank = 1;
-
-                row = ifl_active;
-                tbl.SetRow(0, ref row);
-                tbl.SetValue(0, 1, ref rank);
-
-                row = fl;
-                tbl.SetRow(1, ref row);
-                tbl.SetValue(1, 1, ref rank);
-
-                tool.in_features = tbl;
-#else
                 ESRI.ArcGIS.AnalysisTools.Clip tool = new ESRI.ArcGIS.AnalysisTools.Clip();
                 tool.clip_features = fl;
                 tool.in_features = ifl_active;
-#endif
-                //IScratchWorkspaceFactory iwf_result = new ScratchWorkspaceFactoryClass();
-                //IWorkspace ws = iwf_result.CreateNewScratchWorkspace();
+
                 tool.out_feature_class = gd.FinalLocation.FullName + "\\" + gd.Name; /*ws.PathName*/ //"In_memory" + "\\NWI_Clip_Result";
 
                 gp.AddOutputsToMap = true;
@@ -150,48 +131,32 @@ namespace GAWetlands
         {
             IGeoProcessorResult igpr = e.GPResult;
 
-            if (igpr.Status == esriJobStatus.esriJobSucceeded)
+            switch (igpr.Status)
             {
-                try
-                {
-                    IFeatureLayer ifl_Results = (IFeatureLayer)igpu.FindMapLayer(gd.Name);
+                case esriJobStatus.esriJobExecuting:
+                    break;
 
-#if false
-                if (ifl_Results.FeatureClass.Fields.FindField("AREA") > 0 ||
-                    ifl_Results.FeatureClass.Fields.FindField("PERIMETER") > 0 ||
-                    ifl_Results.FeatureClass.Fields.FindField("LENGTH") > 0)
-                {
-                    int[] fields = {0,0,0,0,0,0} ;
-                    fields[0] = ifl_Results.FeatureClass.Fields.FindField("AREA");
-                    fields[1] = ifl_Results.FeatureClass.Fields.FindField("A_UNIT");
-                    fields[2] = ifl_Results.FeatureClass.Fields.FindField("PERIMETER");
-                    fields[3] = ifl_Results.FeatureClass.Fields.FindField("P_UNIT");
-                    fields[4] = ifl_Results.FeatureClass.Fields.FindField("LENGTH");
-                    fields[5] = ifl_Results.FeatureClass.Fields.FindField("L_UNIT");
-
-                    for (int j = 0; j < 6; j++)
+                case esriJobStatus.esriJobSucceeded:
                     {
-                        if (fields[j] > 0)
+                        try
                         {
-                            ifl_Results.FeatureClass.DeleteField( ifl_Results.FeatureClass.Fields.get_Field(j));
+                            IFeatureLayer ifl_Results = (IFeatureLayer)igpu.FindMapLayer(gd.Name);
+
+                            var dlg_result = System.Windows.Forms.MessageBox.Show("Re-calculate areas and perimeters? (required before query returns correct results)", "", System.Windows.Forms.MessageBoxButtons.YesNo);
+                            if (dlg_result == System.Windows.Forms.DialogResult.No) return;
+
+                            CalcAllValues.DoCalculation(ifl_Results);
+                        }
+                        catch (Exception eeeee)
+                        {
                         }
                     }
-                }
-#else
-                    var dlg_result = System.Windows.Forms.MessageBox.Show("Re-calculate areas and perimeters? (required before query returns correct results)", "", System.Windows.Forms.MessageBoxButtons.YesNo);
-                    if (dlg_result == System.Windows.Forms.DialogResult.No) return;
+                    goto default;
 
-                    CalcAllValues.DoCalculation(ifl_Results);
-#endif
-                }
-                catch (Exception eeeee)
-                {
-                }
-                finally
-                {
-                    //gp.ToolExecuted -= gp_ToolExecuted;
-                    //gp.ProgressChanged -= gp_ProgressChanged;
-                }
+                default:
+                    gp.ToolExecuted -= gp_ToolExecuted;
+                    gp.ProgressChanged -= gp_ProgressChanged;
+                    break;
             }
         }
 
@@ -266,7 +231,8 @@ namespace GAWetlands
             }
             else
             {
-                System.Windows.Forms.MessageBox.Show("NULL Shape");
+                System.Windows.Forms.MessageBox.Show("Shape drawing aborted!");
+                SelectArrowToolOnToolbar();
             }
         }
     }
