@@ -12,6 +12,7 @@ using ESRI.ArcGIS.Geometry;
 using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.Geoprocessing;
 using ESRI.ArcGIS.esriSystem;
+using ESRI.ArcGIS.Display;
 
 namespace GAWetlands
 {
@@ -95,6 +96,18 @@ namespace GAWetlands
                 int vCount = iuvr.ValueCount;
 
                 List<string> values = new List<string>();
+
+                for (int k0 = 0; k0 < iuvr.ValueCount; k0++)
+                {
+                    try
+                    {
+                        IFillSymbol ifs = (IFillSymbol) iuvr.Symbol[iuvr.Value[k0]];
+                        ifs.Outline = null;
+                        //ifs.Outline.Width = 0;
+                    }
+                    catch(Exception abcd) {
+                    }
+                }
                 
                 if (doRemove)
                 {
@@ -102,6 +115,7 @@ namespace GAWetlands
 
                     for (int j = 0; j < vCount; j++)
                     {
+
                         f.WhereClause = "";
                         string[] currValues = iuvr.Value[j].Split(delimiter);
 
@@ -340,7 +354,7 @@ namespace GAWetlands
                         break;
 
                     case "Chemistry":
-                        fieldName = "Chem";
+                        fieldName = "Chemistry1";
                         break;
 
                     case "Class":
@@ -362,6 +376,7 @@ namespace GAWetlands
                         break;
 
                     case "Waterflow":
+                        fieldName = "Water_flow";
                         break;
 
                     case "Waterbody":

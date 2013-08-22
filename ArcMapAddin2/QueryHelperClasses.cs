@@ -17,6 +17,8 @@ namespace GAWetlands
 {
     class QueryHelperClass
     {
+        public System.Collections.Generic.List<string> LastQueryStrings = new System.Collections.Generic.List<string>();
+
         protected static string GetAssemblyPath()
         {
             var codeBase = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
@@ -40,11 +42,15 @@ namespace GAWetlands
                 ITable tbl = (ITable)((IFeatureLayer)igfl).FeatureClass;
                 IQueryFilter qf = getQueryFilter(field, values);
 
+                LastQueryStrings.Clear();
+                LastQueryStrings.Add(qf.WhereClause);
+
                 IDataStatistics ids = new DataStatisticsClass();
                 return tbl.Search(qf, false);
             }
             catch (Exception err)
             {
+                System.Windows.Forms.MessageBox.Show("An error occurred during the query. Ensure the selected layer is an NWI or NWI+ layer and try again.", "Error");
             }
             finally
             {
@@ -62,7 +68,7 @@ namespace GAWetlands
                 qf.WhereClause = qf.WhereClause + " " + field + "='" + values[ii] + "'";// +((ii <= (values.Length - 1)) ? "" : "OR ");
 
                 if (ii < (values.Length - 1))
-                    qf.WhereClause += "OR ";
+                    qf.WhereClause += " OR ";
             }
             return qf;
         }

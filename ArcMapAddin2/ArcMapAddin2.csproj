@@ -205,7 +205,7 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <AddInContent Include="Install\Symbology\Chem_Polygon.lyr">
+    <AddInContent Include="Install\Symbology\Chemistry1_Polygon.lyr">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </AddInContent>
     <AddInContent Include="Install\Symbology\Chem_Polyline.lyr">
@@ -303,7 +303,7 @@
     <AddInContent Include="Install\Symbology\LLWW_Waterbody_Polygon.lyr">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </AddInContent>
-    <AddInContent Include="Install\Symbology\LLWW_WaterFlow_Polygon.lyr">
+    <AddInContent Include="Install\Symbology\LLWW_Water_Flow_Polygon.lyr">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </AddInContent>
   </ItemGroup>
@@ -362,6 +362,11 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </AddInContent>
     <AddInContent Include="Images\polygon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Install\Symbology\Subclass.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </AddInContent>
   </ItemGroup>

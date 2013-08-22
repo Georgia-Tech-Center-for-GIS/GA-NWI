@@ -164,7 +164,7 @@ namespace GAWetlands
                     if (ifl_active.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolygon)
                     {
                         shc.Clear();
-                        shc.Add(new PolygonPerimeter_HelperClass());
+                        //shc.Add(new PolygonPerimeter_HelperClass());
                         shc.Add(new PolygonArea_HelperClass());
                     }
                     else if (ifl_active.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolyline)
@@ -185,8 +185,12 @@ namespace GAWetlands
                         }
                     }
 
+                    int foundCount = 0;
+
                     while ((rw = csr.NextRow()) != null)
                     {
+                        foundCount++;
+
                         for (int j = 0; j < shc.Count; j++)
                         {
                             if (shc[j].doReCalcValues && !iwe.IsBeingEdited())
@@ -201,6 +205,11 @@ namespace GAWetlands
                         }
                     }
 
+                    if (foundCount == 0)
+                    {
+                        System.Windows.Forms.MessageBox.Show("No Records returned.", "Query");
+                    }
+                    else 
                     if (checkBox1.Checked)
                     {
                         IQueryFilter iqf = qhc.getQueryFilter(selectedRadio, queryValues);
@@ -216,12 +225,10 @@ namespace GAWetlands
                 }
                 else
                 {
-                    //dataGridView1.Rows.Add(new object[] { "No Records Found" });
                 }
             }
             catch (Exception err)
             {
-                //dataGridView1.Rows.Add(new object[] { "An Error Occurred" });
             }
             finally
             {
@@ -324,8 +331,8 @@ namespace GAWetlands
                     }
                     else
                     {
-                        dataGridView1.Rows.Add(new object[] { "Coordinate System", "" });                     //0
-                        dataGridView1.Rows.Add(new object[] { "Linear Unit", shc[j].LinearUnit });                         //1
+                        dataGridView1.Rows.Add(new object[] { "Coordinate System", "" });                                      //0
+                        dataGridView1.Rows.Add(new object[] { "Linear Unit", shc[j].LinearUnit });                             //1
                         dataGridView1.Rows.Add(new object[] { "Count", shc[j].count });                                        //2
                         dataGridView1.Rows.Add(new object[] { "Sum", shc[j].sum });                                            //3
                         dataGridView1.Rows.Add(new object[] { "Min", shc[j].min });                                            //4

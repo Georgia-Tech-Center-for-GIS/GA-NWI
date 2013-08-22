@@ -79,48 +79,6 @@ namespace GAWetlands
         #endregion
     }
 
-    public class BtnSymbolize_System : BtnSymbolize_Base
-    {
-        protected override void OnClick()
-        {
-        }
-    }
-
-    public class BtnSymbolize_Class : BtnSymbolize_Base
-    {
-        protected override void OnClick()
-        {
-        }
-    }
-
-    public class BtnSymbolize_Regime : BtnSymbolize_Base
-    {
-        protected override void OnClick()
-        {
-        }
-    }
-
-    public class BtnSymbolize_Special : BtnSymbolize_Base
-    {
-        protected override void OnClick()
-        {
-        }
-    }
-
-    public class BtnSymbolize_Chemistry : BtnSymbolize_Base
-    {
-        protected override void OnClick()
-        {
-        }
-    }
-
-    public class BtnSymbolize_Soil : BtnSymbolize_Base
-    {
-        protected override void OnClick()
-        {
-        }
-    }
-
     public class NWIQueryButton : ESRI.ArcGIS.Desktop.AddIns.Button {
          public void doQuery() {
             OnClick();
@@ -146,28 +104,7 @@ namespace GAWetlands
             base.OnClick();
         }
     }
-
-    public class BtnSymbolize_Landscape : BtnSymbolize_Base
-    {
-        protected override void OnClick()
-        {
-        }
-    }
-
-    public class BtnSymbolize_Landform : BtnSymbolize_Base
-    {
-        protected override void OnClick()
-        {
-        }
-    }
-
-    public class BtnSymbolize_Waterform : BtnSymbolize_Base
-    {
-        protected override void OnClick()
-        {
-        }
-    }
-
+    
     public class BtnSymbolize_Universal : BtnSymbolize_Base
     {
         protected override void OnClick()

@@ -41,7 +41,9 @@ namespace GAWetlands
 
                 IFeatureLayer ifl_active = (IFeatureLayer)ArcMap.Document.SelectedLayer;
 
-                gd.ObjectFilter = new GxFilterBasicTypesClass(); //new GxFilterFeatureClassesClass();
+                gd.Title = "Save clipped feature class";
+
+                gd.ObjectFilter = new GxFilterFeatureClassesClass (); //new GxFilterFeatureClassesClass();
                 if (gd.DoModalSave(ArcMap.Application.hWnd) == false)
                 {
                     return;
@@ -77,13 +79,40 @@ namespace GAWetlands
                 IFeatureWorkspace workspace = (IFeatureWorkspace)name.Open();
                 IWorkspaceEdit iwe = (IWorkspaceEdit)workspace;
 
-                iwe.StartEditing(true);
-                iwe.StartEditOperation();
-
                 ESRI.ArcGIS.Geodatabase.IObjectClassDescription objectClassDescription = new ESRI.ArcGIS.Geodatabase.FeatureClassDescriptionClass();
                 IFields flds = objectClassDescription.RequiredFields;
 
                 IFeatureClass ifc_new = workspace.CreateFeatureClass("AAA", flds, null, null, esriFeatureType.esriFTSimple, ifl_active.FeatureClass.ShapeFieldName, "");
+                IFeatureLayer fl = new FeatureLayerClass();
+                IGeoFeatureLayer gfl = (IGeoFeatureLayer)fl;
+
+                IRgbColor rgbColor = new RgbColorClass();
+                rgbColor.Red = 255;
+                rgbColor.Green = 0;
+                rgbColor.Blue = 0;
+
+                IColor color = rgbColor; // Implicit Cast
+
+                fl.FeatureClass = ifc_new;
+                fl.Name = "IntersectingShape";
+
+                ISimpleFillSymbol sfs = new SimpleFillSymbolClass();
+                sfs.Outline.Color = color;
+
+                color.NullColor = true;
+                sfs.Color = color;
+
+                sfs.Outline.Width = 5;
+
+                ISimpleRenderer isr = new SimpleRendererClass();
+                isr.Symbol = (ISymbol)sfs;
+
+                gfl.Renderer = (IFeatureRenderer)isr;
+                gfl.SpatialReference = igd_dest.SpatialReference;
+
+                iwe.StartEditing(true);
+                iwe.StartEditOperation();
+
                 IFeatureBuffer fb = ifc_new.CreateFeatureBuffer();
                 IFeatureCursor csri = ifc_new.Insert(false);
                 
@@ -94,9 +123,7 @@ namespace GAWetlands
                 iwe.StopEditOperation();
                 iwe.StopEditing(true);
 
-                IFeatureLayer fl = new FeatureLayerClass();
-                fl.FeatureClass = ifc_new;
-                fl.Name = "IntersectingShape";
+                map.AddLayer(fl);
 
                 ESRI.ArcGIS.AnalysisTools.Clip tool = new ESRI.ArcGIS.AnalysisTools.Clip();
                 tool.clip_features = fl;
@@ -140,10 +167,10 @@ namespace GAWetlands
                     {
                         try
                         {
-                            IFeatureLayer ifl_Results = (IFeatureLayer)igpu.FindMapLayer(gd.Name);
+                            IFeatureLayer ifl_Results = (IFeatureLayer)igpu.FindMapLayer(gd.Name.Split('.')[0]);
 
-                            var dlg_result = System.Windows.Forms.MessageBox.Show("Re-calculate areas and perimeters? (required before query returns correct results)", "", System.Windows.Forms.MessageBoxButtons.YesNo);
-                            if (dlg_result == System.Windows.Forms.DialogResult.No) return;
+                            /*var dlg_result = System.Windows.Forms.MessageBox.Show("Re-calculate areas? (required before query returns correct results)", "", System.Windows.Forms.MessageBoxButtons.YesNo);
+                            if (dlg_result == System.Windows.Forms.DialogResult.No) return;*/
 
                             CalcAllValues.DoCalculation(ifl_Results);
                         }

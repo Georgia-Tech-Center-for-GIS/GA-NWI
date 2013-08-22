@@ -28,7 +28,7 @@ namespace GAWetlands
         {
             InitializeComponent();
             rbs = new RadioButton[]
-                { radioButton1, radioButton2, radioButton3, radioButton4, radioButton5, radioButton6, radioButton7, radioButton8, radioButton9};
+                { radioButton1, radioButton2, radioButton3, radioButton4, radioButton5, radioButton6, radioButton7, radioButton8};
 
             for (int i = 0; i < rbs.Length; i ++)
             {
@@ -204,14 +204,13 @@ namespace GAWetlands
                 IRow rw = null;
 
                 List<StatHelperClass> shc = new List<StatHelperClass>();
-                IFeature feat = null;
 
                 if (csr != null)
                 {
                     if (ifl_active.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolygon)
                     {
                         shc.Clear();
-                        shc.Add(new PolygonPerimeter_HelperClass());
+                        //shc.Add(new PolygonPerimeter_HelperClass());
                         shc.Add(new PolygonArea_HelperClass());
                     }
                     else if (ifl_active.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolyline)
@@ -232,8 +231,12 @@ namespace GAWetlands
                         }
                     }
 
+                    int foundCount = 0;
+
                     while ((rw = csr.NextRow()) != null)
                     {
+                        foundCount++;
+
                         for (int j = 0; j < shc.Count; j++)
                         {
                             if (shc[j].doReCalcValues && !iwe.IsBeingEdited())
@@ -248,6 +251,11 @@ namespace GAWetlands
                         }
                     }
 
+                    if (foundCount == 0)
+                    {
+                        System.Windows.Forms.MessageBox.Show("No Records returned.", "Query");
+                    }
+                    else
                     if (checkBox1.Checked)
                     {
                         IQueryFilter iqf = qhc.getQueryFilter(selectedRadio, queryValues);
@@ -263,12 +271,10 @@ namespace GAWetlands
                 }
                 else
                 {
-                    //dataGridView1.Rows.Add(new object[] { "No Records Found" });
                 }
             }
             catch (Exception err)
             {
-                //dataGridView1.Rows.Add(new object[] { "An Error Occurred" });
             }
             finally
             {
@@ -329,6 +335,7 @@ namespace GAWetlands
                         dataGridView1.Rows[5].Cells[colIndex].Value = shc[j].max;
                         dataGridView1.Rows[6].Cells[colIndex].Value = shc[j].mean;
                         dataGridView1.Rows[7].Cells[colIndex].Value = shc[j].range;
+                        dataGridView1.Rows[8].Cells[colIndex].Value = qhc.LastQueryStrings[0];
                     }
                     else
                     {
@@ -340,6 +347,7 @@ namespace GAWetlands
                         dataGridView1.Rows.Add(new object[] { "Max", shc[j].max });                                            //5
                         dataGridView1.Rows.Add(new object[] { "Mean", shc[j].mean });                                          //6
                         dataGridView1.Rows.Add(new object[] { "Range", shc[j].range });                                        //7
+                        dataGridView1.Rows.Add(new object[] { "Last Query String", qhc.LastQueryStrings[0] } );
                     }
                 }
             }
@@ -365,10 +373,12 @@ namespace GAWetlands
 
                 int featureCount = ifl_active.FeatureClass.FeatureCount(iqf);
 
-
-                if (System.Windows.Forms.MessageBox.Show("This will (p)re-calculate areas for ALL " + featureCount + " features in the selected layer. Proceed?", "", MessageBoxButtons.YesNo).Equals(DialogResult.No))
+                if (featureCount >= 10000)
                 {
-                    return;
+                    if (System.Windows.Forms.MessageBox.Show("This will (p)re-calculate areas for ALL " + featureCount + " features in the selected layer. Proceed?", "", MessageBoxButtons.YesNo).Equals(DialogResult.No))
+                    {
+                        return;
+                    }
                 }
 
                 sw.WriteLine("Started Query at " + System.DateTime.Now);
@@ -377,15 +387,13 @@ namespace GAWetlands
 
                 if (ifl_active.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolygon)
                 {
+                    //shc.Add(new PolygonPerimeter_HelperClass());
                     shc.Add(new PolygonArea_HelperClass());
-                    shc.Add(new PolygonPerimeter_HelperClass());
                 }
                 else if (ifl_active.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolyline)
                 {
                     shc.Add(new PolylineHelperClass());
                 }
-
-                //feat = csr.NextFeature();
 
                 for(int i = 0; i < shc.Count; i++)
                     shc[i].SearchForFields((ITable)ifl_active);

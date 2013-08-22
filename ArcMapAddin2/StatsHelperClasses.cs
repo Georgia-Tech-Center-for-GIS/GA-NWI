@@ -152,8 +152,8 @@ namespace GAWetlands
                     return double.NaN;
                 else
                 {
-                    if (double.IsNaN(measuresInCurrentUnits[SumIndex])) return values.Sum();
-                    else return measuresInCurrentUnits[SumIndex];
+                    if (double.IsNaN(measuresInCurrentUnits[SumIndex])) return Math.Round(values.Sum(), 4);
+                    else return Math.Round(measuresInCurrentUnits[SumIndex], 4);
                 }
             }
         }
@@ -166,8 +166,8 @@ namespace GAWetlands
                     return double.NaN;
                 else
                 {
-                    if (double.IsNaN(measuresInCurrentUnits[MinIndex])) return values.Min();
-                    else return measuresInCurrentUnits[MinIndex];
+                    if (double.IsNaN(measuresInCurrentUnits[MinIndex])) return Math.Round(values.Min(), 4);
+                    else return Math.Round(measuresInCurrentUnits[MinIndex], 4);
                 }
             }
         }
@@ -180,8 +180,8 @@ namespace GAWetlands
                     return double.NaN;
                 else
                 {
-                    if (double.IsNaN(measuresInCurrentUnits[MaxIndex])) return values.Max();
-                    else return measuresInCurrentUnits[MaxIndex];
+                    if (double.IsNaN(measuresInCurrentUnits[MaxIndex])) return Math.Round(values.Max(), 4);
+                    else return Math.Round(measuresInCurrentUnits[MaxIndex], 4);
                 }
             }
         }
@@ -196,8 +196,8 @@ namespace GAWetlands
                     return double.NaN;
                 else
                 {
-                    if (double.IsNaN(measuresInCurrentUnits[MeanIndex])) return values.Average();
-                    else return measuresInCurrentUnits[MeanIndex];
+                    if (double.IsNaN(measuresInCurrentUnits[MeanIndex])) return Math.Round(values.Average(), 4);
+                    else return Math.Round(measuresInCurrentUnits[MeanIndex], 4);
                 }
             }
         }

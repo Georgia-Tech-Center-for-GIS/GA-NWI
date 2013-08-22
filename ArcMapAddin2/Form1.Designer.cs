@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.radioButton9 = new System.Windows.Forms.RadioButton();
             this.radioButton8 = new System.Windows.Forms.RadioButton();
             this.radioButton7 = new System.Windows.Forms.RadioButton();
             this.radioButton6 = new System.Windows.Forms.RadioButton();
@@ -54,7 +53,6 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.radioButton9);
             this.groupBox1.Controls.Add(this.radioButton8);
             this.groupBox1.Controls.Add(this.radioButton7);
             this.groupBox1.Controls.Add(this.radioButton6);
@@ -65,21 +63,10 @@
             this.groupBox1.Controls.Add(this.radioButton3);
             this.groupBox1.Location = new System.Drawing.Point(7, 37);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(113, 249);
+            this.groupBox1.Size = new System.Drawing.Size(113, 228);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Query Types";
-            // 
-            // radioButton9
-            // 
-            this.radioButton9.AutoSize = true;
-            this.radioButton9.Location = new System.Drawing.Point(6, 213);
-            this.radioButton9.Name = "radioButton9";
-            this.radioButton9.Size = new System.Drawing.Size(106, 17);
-            this.radioButton9.TabIndex = 12;
-            this.radioButton9.TabStop = true;
-            this.radioButton9.Text = "Georgia Planning";
-            this.radioButton9.UseVisualStyleBackColor = true;
             // 
             // radioButton8
             // 
@@ -308,7 +295,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.RadioButton radioButton9;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button3;
