@@ -45,6 +45,12 @@ namespace GAWetlands
 
                 IFeatureLayer ifl = (IFeatureLayer)ArcMap.Document.SelectedLayer;
 
+                if (symbType == "Chemistry1" && ifl.FeatureClass.FindField(symbType) < 0)
+                {
+                    //try Chem if Chemistry1 not found
+                    symbType = "Chem";
+                }
+
                 if (ifl.FeatureClass.FindField(symbType) < 0)
                 {
                     System.Windows.Forms.MessageBox.Show("Selected layer does not contain the " + symbType + " field and can't be symbolized " +
@@ -63,7 +69,14 @@ namespace GAWetlands
                 
                 if (filenameSuffix != "Rated")
                 {
-                    layerFile.Open(asmPath + "/Symbology/" + filenamePrefix + symbType + "_" + geomTypeName + filenameSuffix + ".lyr");
+                    if (symbType == "Chem")
+                    {
+                        layerFile.Open(asmPath + "/Symbology/" + filenamePrefix + "Chemistry1" + "_" + geomTypeName + filenameSuffix + ".lyr");
+                    }
+                    else
+                    {
+                        layerFile.Open(asmPath + "/Symbology/" + filenamePrefix + symbType + "_" + geomTypeName + filenameSuffix + ".lyr");
+                    }
                 }
                 else
                 {
@@ -72,13 +85,22 @@ namespace GAWetlands
 
                 IGeoFeatureLayer igfl = (IGeoFeatureLayer)layerFile.Layer;
                 IUniqueValueRenderer iuvr = (IUniqueValueRenderer)igfl.Renderer;
-                iuvr.UseDefaultSymbol = false;
-                iuvr.Field[0] = symbType;
+                IUniqueValueRenderer iuvr_new = iuvr;
 
                 if( filenameSuffix == "Rated") {
+                    iuvr_new = new UniqueValueRendererClass();
+                    iuvr_new.FieldCount = 1;
+                    iuvr_new.Field[0] = symbType;
+                    iuvr_new.DefaultSymbol = iuvr.DefaultSymbol;
+                    iuvr_new.UseDefaultSymbol = false;
+
+//                    iuvr.UseDefaultSymbol = false;
+//                    iuvr.Field[0] = symbType;
+
                     for (int l = 0; l < iuvr.ValueCount; l++)
                     {
-                        iuvr.Heading[iuvr.Value[l]] = symbType;
+                        //iuvr.Heading[iuvr.Value[l]] = symbType;
+                        iuvr_new.AddValue(iuvr.Value[l], symbType, iuvr.Symbol[iuvr.Value[l]]);
                     }
                 }
 
@@ -93,15 +115,15 @@ namespace GAWetlands
                 string suffix = sql.GetSpecialCharacter(esriSQLSpecialCharacters.esriSQL_DelimitedIdentifierSuffix);
 
                 IQueryFilter f = new QueryFilterClass();
-                int vCount = iuvr.ValueCount;
+                int vCount = iuvr_new.ValueCount;
 
                 List<string> values = new List<string>();
 
-                for (int k0 = 0; k0 < iuvr.ValueCount; k0++)
+                for (int k0 = 0; k0 < iuvr_new.ValueCount; k0++)
                 {
                     try
                     {
-                        IFillSymbol ifs = (IFillSymbol) iuvr.Symbol[iuvr.Value[k0]];
+                        IFillSymbol ifs = (IFillSymbol) iuvr_new.Symbol[iuvr.Value[k0]];
                         ifs.Outline = null;
                         //ifs.Outline.Width = 0;
                     }
@@ -111,20 +133,20 @@ namespace GAWetlands
                 
                 if (doRemove)
                 {
-                    char[] delimiter = { iuvr.FieldDelimiter[0] };
+                    char[] delimiter = { iuvr_new.FieldDelimiter[0] };
 
                     for (int j = 0; j < vCount; j++)
                     {
 
                         f.WhereClause = "";
-                        string[] currValues = iuvr.Value[j].Split(delimiter);
+                        string[] currValues = iuvr_new.Value[j].Split(delimiter);
 
                         for (int k = 0; k < currValues.Length; k++)
                         {
                             if (k > 0)
                                 f.WhereClause += " AND ";
 
-                            f.WhereClause += prefix + iuvr.Field[k] + suffix + " = '" + currValues[k].Trim() + "'";
+                            f.WhereClause += prefix + iuvr_new.Field[k] + suffix + " = '" + currValues[k].Trim() + "'";
                         }
 
                         ICursor fc = null;
@@ -141,19 +163,19 @@ namespace GAWetlands
                         }
 
                         if (!bFound)
-                            values.Add(iuvr.Value[j]);
+                            values.Add(iuvr_new.Value[j]);
                     }
                 }
 
                 foreach (string v in values)
                 {
-                    iuvr.RemoveValue(v);
+                    iuvr_new.RemoveValue(v);
                 }
 
-                if (iuvr.ValueCount > 0)
+                if (iuvr_new.ValueCount > 0)
                 {
                     IGeoFeatureLayer igd_dest = (IGeoFeatureLayer)ifl;
-                    igd_dest.Renderer = (IFeatureRenderer)iuvr;
+                    igd_dest.Renderer = (IFeatureRenderer)iuvr_new;
 
                     ArcMap.Document.ActiveView.ContentsChanged();
                     ArcMap.Document.UpdateContents();

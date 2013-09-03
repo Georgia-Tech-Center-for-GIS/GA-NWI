@@ -46,7 +46,8 @@
             this.button1 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.QCompleteLabel = new System.Windows.Forms.Label();
+            this.CopySelectedFeatures = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
@@ -218,7 +219,7 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(314, 23);
             this.button1.TabIndex = 10;
-            this.button1.Text = "Precalculate All Areas/Lengths";
+            this.button1.Text = "Precalculate All Areas";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -246,17 +247,35 @@
             this.dataGridView1.Size = new System.Drawing.Size(294, 212);
             this.dataGridView1.TabIndex = 13;
             // 
-            // backgroundWorker1
+            // QCompleteLabel
             // 
-            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.DoWork);
-            this.backgroundWorker1.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.ProgressChanged);
-            this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.Completed);
+            this.QCompleteLabel.AutoSize = true;
+            this.QCompleteLabel.BackColor = System.Drawing.Color.Transparent;
+            this.QCompleteLabel.ForeColor = System.Drawing.Color.Red;
+            this.QCompleteLabel.Location = new System.Drawing.Point(244, 294);
+            this.QCompleteLabel.Name = "QCompleteLabel";
+            this.QCompleteLabel.Size = new System.Drawing.Size(82, 13);
+            this.QCompleteLabel.TabIndex = 14;
+            this.QCompleteLabel.Text = "Query Complete";
+            this.QCompleteLabel.Visible = false;
+            // 
+            // CopySelectedFeatures
+            // 
+            this.CopySelectedFeatures.Location = new System.Drawing.Point(496, 289);
+            this.CopySelectedFeatures.Name = "CopySelectedFeatures";
+            this.CopySelectedFeatures.Size = new System.Drawing.Size(144, 23);
+            this.CopySelectedFeatures.TabIndex = 15;
+            this.CopySelectedFeatures.Text = "Save selected features";
+            this.CopySelectedFeatures.UseVisualStyleBackColor = true;
+            this.CopySelectedFeatures.Click += new System.EventHandler(this.CopySelectedFeatures_Click);
             // 
             // NWIQuery
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(652, 321);
+            this.Controls.Add(this.CopySelectedFeatures);
+            this.Controls.Add(this.QCompleteLabel);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button1);
@@ -299,6 +318,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.DataGridView dataGridView1;
-        private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.Windows.Forms.Label QCompleteLabel;
+        private System.Windows.Forms.Button CopySelectedFeatures;
     }
 }

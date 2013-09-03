@@ -208,7 +208,7 @@
     <AddInContent Include="Install\Symbology\Chemistry1_Polygon.lyr">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </AddInContent>
-    <AddInContent Include="Install\Symbology\Chem_Polyline.lyr">
+    <AddInContent Include="Install\Symbology\Chemistry1_Polyline.lyr">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </AddInContent>
     <AddInContent Include="Install\Symbology\Class1_Polygon.lyr">

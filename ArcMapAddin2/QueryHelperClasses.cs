@@ -192,17 +192,17 @@ namespace GAWetlands
                 {
                     if (curr.Contains("Subtidal"))
                     {
-                        value = "( System <> 'L' AND Subsystem = 1)";
+                        value = "( System <> 'L' AND Subsystem = '1')";
                     }
                     else
                     {
-                        value = "( System <> 'L' AND Subsystem = 2)";
+                        value = "( System <> 'L' AND Subsystem = '2')";
                     }
                 }
                 else
                 {
                     string[] vals = curr.Split(splits);
-                    value = "( Class1 = '" + vals[1] + "' AND Subclass1 = " + vals[2].Trim() + ") ";
+                    value = "( Class1 = '" + vals[1] + "' AND Subclass1 = '" + vals[2].Trim() + "') ";
                 }
                 queryValues[i] = value;
                 i++;
@@ -242,7 +242,7 @@ namespace GAWetlands
         {
             ESRI.ArcGIS.Carto.ILayerFile layerFile = new LayerFileClass();
             //layerFile.Open("\\\\tornado\\Research3\\Tony\\Wetlands\\wetlands10.1\\10.0\\" + queryType + "_Poly.lyr");
-            layerFile.Open(GetAssemblyPath() + "\\Symbology\\LLWWW_" + queryType + "_Polygon"+ fileSuffix +".lyr");
+            layerFile.Open(GetAssemblyPath() + "\\Symbology\\LLWW_" + queryType + "_Polygon"+ fileSuffix +".lyr");
 
             IGeoFeatureLayer igfl_lyr = (IGeoFeatureLayer)layerFile.Layer;
             IUniqueValueRenderer iuvr = (IUniqueValueRenderer)igfl_lyr.Renderer;

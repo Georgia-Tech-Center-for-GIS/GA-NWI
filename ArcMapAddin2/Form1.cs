@@ -12,12 +12,15 @@ using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.Geometry;
 using ESRI.ArcGIS.esriSystem;
 using ESRI.ArcGIS.Geoprocessing;
+using ESRI.ArcGIS.Geoprocessor;
+using ESRI.ArcGIS.CatalogUI;
+using ESRI.ArcGIS.Catalog;
 
 namespace GAWetlands
 {
     public partial class NWIQuery : Form
     {
-        private string[] tags = { "System", "Subsystem", "Class1", "Subclass", "Water1", "Special1", "Chem", "Soil", "GAPlanning" };
+        private string[] tags = { "System", "Subsystem", "Class1", "Subclass", "Water1", "Special1", "Chemistry1", "Soil", "GAPlanning" };
         private string selectedRadio = "";
 
         private QueryHelperClass qhc = new QueryHelperClass();
@@ -106,41 +109,7 @@ namespace GAWetlands
             try
             {
                 ToolStripItem tsi = (ToolStripItem)sender;
-
-                ContextMenuStrip cms = (ContextMenuStrip)tsi.Owner;
-                StatHelperClass shc = (StatHelperClass) ((object[])cms.Tag) [0];
-                int colIndex = (int)((object[])cms.Tag)[1];
-
-                if (shc.DoConversion(tsi.Text))
-                {
-                    for (int i = 3; i < 8; i++)
-                    {
-                        double value = double.NaN;
-                        switch (i)
-                        {
-                            case StatHelperClass.SumIndex:
-                                value = shc.sum;
-                                break;
-
-                            case StatHelperClass.MinIndex:
-                                value = shc.min;
-                                break;
-
-                            case StatHelperClass.MaxIndex:
-                                value = shc.max;
-                                break;
-
-                            case StatHelperClass.MeanIndex:
-                                value = shc.mean;
-                                break;
-                        }
-
-                        dataGridView1[colIndex, i].Value = value;
-                    }
-
-                    dataGridView1[colIndex, StatHelperClass.RangeIndex].Value = shc.range;
-                    dataGridView1[colIndex, 1].Value = tsi.Text;
-                }
+                CommonQueryForm.DoConversion(tsi, dataGridView1);
             }
             catch (Exception err)
             {
@@ -150,28 +119,6 @@ namespace GAWetlands
             }
         }
 
-        protected int EnsureColumnsInDataGrid(StatHelperClass shc)
-        {
-            if (dataGridView1.Columns.Count == 0)
-            {
-                dataGridView1.Columns.Add("nm", "Statistic");
-                dataGridView1.Columns[0].SortMode = DataGridViewColumnSortMode.NotSortable;
-            }
-
-            string col = shc.GetColumnHeadings();
-
-            if(dataGridView1.Columns.Contains(col)) {
-                return dataGridView1.Columns[col].Index;
-            }
-
-            DataGridViewColumn dvc = new DataGridViewColumn();
-            dvc.Name = col;
-            dvc.HeaderText = col;
-            dvc.SortMode = DataGridViewColumnSortMode.NotSortable;
-            dvc.CellTemplate = new DataGridViewTextBoxCell();
-            dvc.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            return dataGridView1.Columns.Add(dvc);
-        }
 
         protected void button1_Click(object sender, EventArgs e)
         {
@@ -185,6 +132,8 @@ namespace GAWetlands
 
         protected void DoWork(object sender, DoWorkEventArgs e)
         {
+            QCompleteLabel.Hide();
+
             IWorkspaceEdit iwe = null;
 
             dataGridView1.Rows.Clear();
@@ -247,7 +196,7 @@ namespace GAWetlands
 
                             shc[j].ProcessFeature(iwe, ifl_active, rw);
 
-                            this.ProgressChanged(sender, null);
+                            this.ProgressChanged();
                         }
                     }
 
@@ -267,7 +216,7 @@ namespace GAWetlands
                         ArcMap.Document.ActiveView.PartialRefresh(esriViewDrawPhase.esriViewGeoSelection, null, null);
                     }
 
-                    Completed(sender, new RunWorkerCompletedEventArgs(shc, null, false));
+                    CommonQueryForm.Completed(shc, dataGridView1, QueryForm_Click);
                 }
                 else
                 {
@@ -285,10 +234,11 @@ namespace GAWetlands
 
                 if (iwe != null && iwe.IsBeingEdited())
                     iwe.StopEditing(true);
+                QCompleteLabel.Show();
             }
         }
 
-        protected void ProgressChanged(object sender, ProgressChangedEventArgs e)
+        protected void ProgressChanged()
         {
             if (progressBar1.Value == progressBar1.Maximum)
             {
@@ -298,58 +248,19 @@ namespace GAWetlands
             progressBar1.Increment(1);
         }
 
-        protected void Completed(object sender, RunWorkerCompletedEventArgs e)
+        private void CopySelectedFeatures_Click(object sender, EventArgs e)
         {
-            List<StatHelperClass> shc = (List<StatHelperClass>)e.Result;
-            progressBar1.Value = progressBar1.Maximum;
+            CommonQueryForm.DoSaveSelectedFeatures();
 
-            for (int j = 0; j < shc.Count; j++)
+            try
             {
-                if (shc[j].count > 0)
-                {
-                    int colIndex = EnsureColumnsInDataGrid(shc[j]);
-
-                    dataGridView1.Columns[colIndex].ContextMenuStrip = new ContextMenuStrip();
-                    dataGridView1.Columns[colIndex].ContextMenuStrip.Tag = new object[] { shc[j], colIndex };
-
-                    if (shc[j].useArealUnit)
-                    {
-                        dataGridView1.Columns[colIndex].ContextMenuStrip.Items.Add(new ToolStripLabel("Acres", null, false, new EventHandler(QueryForm_Click)));
-                        dataGridView1.Columns[colIndex].ContextMenuStrip.Items.Add(new ToolStripLabel("Hectares", null, false, new EventHandler(QueryForm_Click)));
-                        dataGridView1.Columns[colIndex].ContextMenuStrip.Items.Add(new ToolStripLabel("Square Feet", null, false, new EventHandler(QueryForm_Click)));
-                        dataGridView1.Columns[colIndex].ContextMenuStrip.Items.Add(new ToolStripLabel("Square Meters", null, false, new EventHandler(QueryForm_Click)));
-                    }
-                    else
-                    {
-                        dataGridView1.Columns[colIndex].ContextMenuStrip.Items.Add(new ToolStripLabel("Feet", null, false, new EventHandler(QueryForm_Click)));
-                        dataGridView1.Columns[colIndex].ContextMenuStrip.Items.Add(new ToolStripLabel("Meters", null, false, new EventHandler(QueryForm_Click)));
-                    }
-
-                    if (dataGridView1.Rows.Count > 0)
-                    {
-                        dataGridView1.Rows[0].Cells[colIndex].Value = "";
-                        dataGridView1.Rows[1].Cells[colIndex].Value = shc[j].LinearUnit;
-                        dataGridView1.Rows[2].Cells[colIndex].Value = shc[j].count;
-                        dataGridView1.Rows[3].Cells[colIndex].Value = shc[j].sum;
-                        dataGridView1.Rows[4].Cells[colIndex].Value = shc[j].min;
-                        dataGridView1.Rows[5].Cells[colIndex].Value = shc[j].max;
-                        dataGridView1.Rows[6].Cells[colIndex].Value = shc[j].mean;
-                        dataGridView1.Rows[7].Cells[colIndex].Value = shc[j].range;
-                        dataGridView1.Rows[8].Cells[colIndex].Value = qhc.LastQueryStrings[0];
-                    }
-                    else
-                    {
-                        dataGridView1.Rows.Add(new object[] { "Coordinate System", "" });                     //0
-                        dataGridView1.Rows.Add(new object[] { "Linear Unit", shc[j].LinearUnit });                         //1
-                        dataGridView1.Rows.Add(new object[] { "Count", shc[j].count });                                        //2
-                        dataGridView1.Rows.Add(new object[] { "Sum", shc[j].sum });                                            //3
-                        dataGridView1.Rows.Add(new object[] { "Min", shc[j].min });                                            //4
-                        dataGridView1.Rows.Add(new object[] { "Max", shc[j].max });                                            //5
-                        dataGridView1.Rows.Add(new object[] { "Mean", shc[j].mean });                                          //6
-                        dataGridView1.Rows.Add(new object[] { "Range", shc[j].range });                                        //7
-                        dataGridView1.Rows.Add(new object[] { "Last Query String", qhc.LastQueryStrings[0] } );
-                    }
-                }
+              
+            }
+            catch (Exception eabcd)
+            {
+            }
+            finally
+            {
             }
         }
     }
@@ -434,6 +345,121 @@ namespace GAWetlands
     }
     public class CommonQueryForm
     {
+        private static Geoprocessor gp = new Geoprocessor();
+        private static IGxDialog gd = new GxDialogClass();
+
+        public static void Completed(List<StatHelperClass> shc, DataGridView dataGridView1, EventHandler eh)
+        {
+            for (int j = 0; j < shc.Count; j++)
+            {
+                if (shc[j].count > 0)
+                {
+                    int colIndex = EnsureColumnsInDataGrid(shc[j], dataGridView1);
+
+                    dataGridView1.Columns[colIndex].ContextMenuStrip = new ContextMenuStrip();
+                    dataGridView1.Columns[colIndex].ContextMenuStrip.Tag = new object[] { shc[j], colIndex };
+
+                    if (shc[j].useArealUnit)
+                    {
+                        dataGridView1.Columns[colIndex].ContextMenuStrip.Items.Add(new ToolStripLabel("Acres", null, false, new EventHandler(eh)));
+                        dataGridView1.Columns[colIndex].ContextMenuStrip.Items.Add(new ToolStripLabel("Hectares", null, false, new EventHandler(eh)));
+                        dataGridView1.Columns[colIndex].ContextMenuStrip.Items.Add(new ToolStripLabel("Square Feet", null, false, new EventHandler(eh)));
+                        dataGridView1.Columns[colIndex].ContextMenuStrip.Items.Add(new ToolStripLabel("Square Meters", null, false, new EventHandler(eh)));
+                    }
+                    else
+                    {
+                        dataGridView1.Columns[colIndex].ContextMenuStrip.Items.Add(new ToolStripLabel("Feet", null, false, new EventHandler(eh)));
+                        dataGridView1.Columns[colIndex].ContextMenuStrip.Items.Add(new ToolStripLabel("Meters", null, false, new EventHandler(eh)));
+                    }
+
+                    if (dataGridView1.Rows.Count > 0)
+                    {
+                        dataGridView1.Rows[0].Cells[colIndex].Value = "";
+                        dataGridView1.Rows[1].Cells[colIndex].Value = shc[j].LinearUnit;
+                        dataGridView1.Rows[2].Cells[colIndex].Value = shc[j].count;
+                        dataGridView1.Rows[3].Cells[colIndex].Value = shc[j].sum;
+                        dataGridView1.Rows[4].Cells[colIndex].Value = shc[j].min;
+                        dataGridView1.Rows[5].Cells[colIndex].Value = shc[j].max;
+                        dataGridView1.Rows[6].Cells[colIndex].Value = shc[j].mean;
+                        dataGridView1.Rows[7].Cells[colIndex].Value = shc[j].range;
+                    }
+                    else
+                    {
+                        dataGridView1.Rows.Add(new object[] { "Coordinate System", "" }); //0
+                        dataGridView1.Rows.Add(new object[] { "Linear Unit", shc[j].LinearUnit }); //1
+                        dataGridView1.Rows.Add(new object[] { "Count", shc[j].count }); //2
+                        dataGridView1.Rows.Add(new object[] { "Sum", shc[j].sum.ToString("N") }); //3
+                        dataGridView1.Rows.Add(new object[] { "Min", shc[j].min.ToString("N") }); //4
+                        dataGridView1.Rows.Add(new object[] { "Max", shc[j].max.ToString("N") }); //5
+                        dataGridView1.Rows.Add(new object[] { "Mean", shc[j].mean.ToString("N") });                                          //6
+                        dataGridView1.Rows.Add(new object[] { "Range", shc[j].range.ToString("N") }); //7
+                    }
+                }
+            }
+        }
+
+        public static int EnsureColumnsInDataGrid(StatHelperClass shc, DataGridView dataGridView1)
+        {
+            if (dataGridView1.Columns.Count == 0)
+            {
+                dataGridView1.Columns.Add("nm", "Statistic");
+                dataGridView1.Columns[0].SortMode = DataGridViewColumnSortMode.NotSortable;
+            }
+
+            string col = shc.GetColumnHeadings();
+
+            if (dataGridView1.Columns.Contains(col))
+            {
+                return dataGridView1.Columns[col].Index;
+            }
+
+            DataGridViewColumn dvc = new DataGridViewColumn();
+            dvc.Name = col;
+            dvc.HeaderText = col;
+            dvc.SortMode = DataGridViewColumnSortMode.NotSortable;
+            dvc.CellTemplate = new DataGridViewTextBoxCell();
+            dvc.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            return dataGridView1.Columns.Add(dvc);
+        }
+
+        public static void DoConversion(ToolStripItem tsi, DataGridView dataGridView1)
+        {
+            ContextMenuStrip cms = (ContextMenuStrip)tsi.Owner;
+            StatHelperClass shc = (StatHelperClass)((object[])cms.Tag)[0];
+            int colIndex = (int)((object[])cms.Tag)[1];
+
+            if (shc.DoConversion(tsi.Text))
+            {
+                for (int i = 3; i < 8; i++)
+                {
+                    double value = double.NaN;
+                    switch (i)
+                    {
+                        case StatHelperClass.SumIndex:
+                            value = shc.sum;
+                            break;
+
+                        case StatHelperClass.MinIndex:
+                            value = shc.min;
+                            break;
+
+                        case StatHelperClass.MaxIndex:
+                            value = shc.max;
+                            break;
+
+                        case StatHelperClass.MeanIndex:
+                            value = shc.mean;
+                            break;
+                    }
+
+                    dataGridView1[colIndex, i].Value = value;
+                }
+
+                dataGridView1[colIndex, StatHelperClass.RangeIndex].Value = shc.range;
+                dataGridView1[colIndex, 1].Value = tsi.Text;
+            }
+        }
+
         public static void ExportGridControlContentsExcel(DataGridView dataGridView1)
         {
             try
@@ -461,7 +487,7 @@ namespace GAWetlands
                 }
 
                 // storing Each row and column value to excel sheet
-                for (int i = 0; i < dataGridView1.Rows.Count - 1; i++)
+                for (int i = 0; i < dataGridView1.Rows.Count; i++)
                 {
                     for (int j = 0; j < dataGridView1.Columns.Count; j++)
                     {
@@ -472,6 +498,31 @@ namespace GAWetlands
             catch (Exception err)
             {
             }
+        }
+
+        public static void DoSaveSelectedFeatures()
+        {
+            if (ArcMap.Document.SelectedLayer == null)
+            {
+                System.Windows.Forms.MessageBox.Show("Select a layer before continuing.");
+                return;
+            }
+
+            IFeatureLayer ifl_active = (IFeatureLayer)ArcMap.Document.SelectedLayer;
+
+            gd.Title = "Save selected features";
+
+            gd.ObjectFilter = new GxFilterFeatureClassesClass(); //new GxFilterFeatureClassesClass();
+            if (gd.DoModalSave(ArcMap.Application.hWnd) == false)
+            {
+                return;
+            }
+
+            ESRI.ArcGIS.DataManagementTools.CopyFeatures cf = new ESRI.ArcGIS.DataManagementTools.CopyFeatures();
+            cf.in_features = ifl_active;
+            cf.out_feature_class = gd.FinalLocation.FullName + "\\" + gd.Name;
+
+            gp.ExecuteAsync(cf);
         }
     }
 }

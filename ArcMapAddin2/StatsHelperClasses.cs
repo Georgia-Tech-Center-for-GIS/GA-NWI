@@ -87,7 +87,7 @@ namespace GAWetlands
 
             igpau.Units = this.currentAreaUnit;
 
-            for (int i = SumIndex; i < MeanIndex; i++)
+            for (int i = SumIndex; i <= MeanIndex; i++)
             {
                 double oldValue = double.NaN;
                 switch (i)
@@ -136,6 +136,7 @@ namespace GAWetlands
         }
 
         private double[] measuresInCurrentUnits = new double[] { double.NaN, double.NaN, double.NaN, double.NaN, double.NaN, double.NaN, double.NaN, double.NaN };
+        private const int NumDecimals = 2;
 
         public const int CountIndex = 2;
         public const int SumIndex = 3;
@@ -152,8 +153,8 @@ namespace GAWetlands
                     return double.NaN;
                 else
                 {
-                    if (double.IsNaN(measuresInCurrentUnits[SumIndex])) return Math.Round(values.Sum(), 4);
-                    else return Math.Round(measuresInCurrentUnits[SumIndex], 4);
+                    if (double.IsNaN(measuresInCurrentUnits[SumIndex])) return Math.Round(values.Sum(), NumDecimals);
+                    else return Math.Round(measuresInCurrentUnits[SumIndex], NumDecimals);
                 }
             }
         }
@@ -166,8 +167,8 @@ namespace GAWetlands
                     return double.NaN;
                 else
                 {
-                    if (double.IsNaN(measuresInCurrentUnits[MinIndex])) return Math.Round(values.Min(), 4);
-                    else return Math.Round(measuresInCurrentUnits[MinIndex], 4);
+                    if (double.IsNaN(measuresInCurrentUnits[MinIndex])) return Math.Round(values.Min(), NumDecimals);
+                    else return Math.Round(measuresInCurrentUnits[MinIndex], NumDecimals);
                 }
             }
         }
@@ -180,8 +181,8 @@ namespace GAWetlands
                     return double.NaN;
                 else
                 {
-                    if (double.IsNaN(measuresInCurrentUnits[MaxIndex])) return Math.Round(values.Max(), 4);
-                    else return Math.Round(measuresInCurrentUnits[MaxIndex], 4);
+                    if (double.IsNaN(measuresInCurrentUnits[MaxIndex])) return Math.Round(values.Max(), NumDecimals);
+                    else return Math.Round(measuresInCurrentUnits[MaxIndex], NumDecimals);
                 }
             }
         }
@@ -196,8 +197,8 @@ namespace GAWetlands
                     return double.NaN;
                 else
                 {
-                    if (double.IsNaN(measuresInCurrentUnits[MeanIndex])) return Math.Round(values.Average(), 4);
-                    else return Math.Round(measuresInCurrentUnits[MeanIndex], 4);
+                    if (double.IsNaN(measuresInCurrentUnits[MeanIndex])) return Math.Round(values.Average(), NumDecimals);
+                    else return Math.Round(measuresInCurrentUnits[MeanIndex], NumDecimals);
                 }
             }
         }
