@@ -196,7 +196,7 @@ namespace GAWetlands
                         ArcMap.Document.ActiveView.PartialRefresh(esriViewDrawPhase.esriViewGeoSelection, null, null);
                     }
 
-                    CommonQueryForm.Completed(shc, dataGridView1, QueryForm_Click);
+                    CommonQueryForm.Completed(qhc,shc, dataGridView1, QueryForm_Click);
                 }
                 else
                 {
@@ -236,7 +236,7 @@ namespace GAWetlands
 
         private void CopySelectedFeatures_Click(object sender, EventArgs e)
         {
-            CommonQueryForm.DoSaveSelectedFeatures();
+            CommonQueryForm.DoSaveSelectedFeatures(this);
         }
     }
 }

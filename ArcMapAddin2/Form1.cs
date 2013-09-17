@@ -216,7 +216,7 @@ namespace GAWetlands
                         ArcMap.Document.ActiveView.PartialRefresh(esriViewDrawPhase.esriViewGeoSelection, null, null);
                     }
 
-                    CommonQueryForm.Completed(shc, dataGridView1, QueryForm_Click);
+                    CommonQueryForm.Completed(qhc, shc, dataGridView1, QueryForm_Click);
                 }
                 else
                 {
@@ -250,7 +250,7 @@ namespace GAWetlands
 
         private void CopySelectedFeatures_Click(object sender, EventArgs e)
         {
-            CommonQueryForm.DoSaveSelectedFeatures();
+            CommonQueryForm.DoSaveSelectedFeatures(this);
 
             try
             {
@@ -269,7 +269,7 @@ namespace GAWetlands
     {
         public static void DoCalculation(IFeatureLayer ifl_active)
         {
-            System.IO.StreamWriter sw = new System.IO.StreamWriter("C:\\Log.txt");
+            //System.IO.StreamWriter sw = new System.IO.StreamWriter("C:\\Log.txt");
             List<StatHelperClass> shc = new List<StatHelperClass>();
 
             try {
@@ -292,7 +292,8 @@ namespace GAWetlands
                     }
                 }
 
-                sw.WriteLine("Started Query at " + System.DateTime.Now);
+                //sw.WriteLine("Started Query at " + System.DateTime.Now);
+
                 IWorkspace ws = ((IDataset)ArcMap.Document.ActiveView.FocusMap.Layer[0]).Workspace;
                 IWorkspaceEdit iwe = (IWorkspaceEdit)ws;
 
@@ -328,8 +329,8 @@ namespace GAWetlands
             }
             finally
             {
-                sw.WriteLine("Finished Calculation at " + System.DateTime.Now);
-                sw.Close();
+                //sw.WriteLine("Finished Calculation at " + System.DateTime.Now);
+                //sw.Close();
 
                 try
                 {
@@ -348,12 +349,14 @@ namespace GAWetlands
         private static Geoprocessor gp = new Geoprocessor();
         private static IGxDialog gd = new GxDialogClass();
 
-        public static void Completed(List<StatHelperClass> shc, DataGridView dataGridView1, EventHandler eh)
+        public static void Completed(QueryHelperClass qhc, List<StatHelperClass> shc, DataGridView dataGridView1, EventHandler eh)
         {
             for (int j = 0; j < shc.Count; j++)
             {
                 if (shc[j].count > 0)
                 {
+                    dataGridView1.Rows.Clear();
+                    dataGridView1.Columns.Clear();
                     int colIndex = EnsureColumnsInDataGrid(shc[j], dataGridView1);
 
                     dataGridView1.Columns[colIndex].ContextMenuStrip = new ContextMenuStrip();
@@ -374,7 +377,7 @@ namespace GAWetlands
 
                     if (dataGridView1.Rows.Count > 0)
                     {
-                        dataGridView1.Rows[0].Cells[colIndex].Value = "";
+                        dataGridView1.Rows[0].Cells[colIndex].Value = shc[j].CoordinateSystem;
                         dataGridView1.Rows[1].Cells[colIndex].Value = shc[j].LinearUnit;
                         dataGridView1.Rows[2].Cells[colIndex].Value = shc[j].count;
                         dataGridView1.Rows[3].Cells[colIndex].Value = shc[j].sum;
@@ -382,10 +385,11 @@ namespace GAWetlands
                         dataGridView1.Rows[5].Cells[colIndex].Value = shc[j].max;
                         dataGridView1.Rows[6].Cells[colIndex].Value = shc[j].mean;
                         dataGridView1.Rows[7].Cells[colIndex].Value = shc[j].range;
+                        dataGridView1.Rows[8].Cells[colIndex].Value = qhc.LastQueryStrings.FirstOrDefault();
                     }
                     else
                     {
-                        dataGridView1.Rows.Add(new object[] { "Coordinate System", "" }); //0
+                        dataGridView1.Rows.Add(new object[] { "Coordinate System", shc[j].CoordinateSystem }); //0
                         dataGridView1.Rows.Add(new object[] { "Linear Unit", shc[j].LinearUnit }); //1
                         dataGridView1.Rows.Add(new object[] { "Count", shc[j].count }); //2
                         dataGridView1.Rows.Add(new object[] { "Sum", shc[j].sum.ToString("N") }); //3
@@ -393,6 +397,7 @@ namespace GAWetlands
                         dataGridView1.Rows.Add(new object[] { "Max", shc[j].max.ToString("N") }); //5
                         dataGridView1.Rows.Add(new object[] { "Mean", shc[j].mean.ToString("N") });                                          //6
                         dataGridView1.Rows.Add(new object[] { "Range", shc[j].range.ToString("N") }); //7
+                        dataGridView1.Rows.Add(new object[] { "Query String", qhc.LastQueryStrings.FirstOrDefault() });
                     }
                 }
             }
@@ -500,7 +505,7 @@ namespace GAWetlands
             }
         }
 
-        public static void DoSaveSelectedFeatures()
+        public static void DoSaveSelectedFeatures(Form frmSrc)
         {
             if (ArcMap.Document.SelectedLayer == null)
             {
@@ -508,11 +513,16 @@ namespace GAWetlands
                 return;
             }
 
+            if (frmSrc != null)
+            {
+                frmSrc.TopMost = false;
+            }
+
             IFeatureLayer ifl_active = (IFeatureLayer)ArcMap.Document.SelectedLayer;
 
             gd.Title = "Save selected features";
-
             gd.ObjectFilter = new GxFilterFeatureClassesClass(); //new GxFilterFeatureClassesClass();
+
             if (gd.DoModalSave(ArcMap.Application.hWnd) == false)
             {
                 return;
@@ -521,6 +531,11 @@ namespace GAWetlands
             ESRI.ArcGIS.DataManagementTools.CopyFeatures cf = new ESRI.ArcGIS.DataManagementTools.CopyFeatures();
             cf.in_features = ifl_active;
             cf.out_feature_class = gd.FinalLocation.FullName + "\\" + gd.Name;
+
+            if (frmSrc != null)
+            {
+                frmSrc.TopMost = false;
+            }
 
             gp.ExecuteAsync(cf);
         }

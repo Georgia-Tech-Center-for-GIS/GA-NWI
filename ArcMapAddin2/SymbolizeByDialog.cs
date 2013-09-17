@@ -417,7 +417,7 @@ namespace GAWetlands
                         goto case "Rated";
 
                     case "Nutrient Transformation":
-                        fieldName = "Nutrient_Tra";
+                        fieldName = "Nutrnt_Tra";
                         goto case "Rated";
 
                     case "Carbon Sequestration":

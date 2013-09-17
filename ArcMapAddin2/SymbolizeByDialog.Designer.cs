@@ -145,6 +145,7 @@
             this.checkBox2.TabIndex = 11;
             this.checkBox2.Text = "Remove unused categories";
             this.checkBox2.UseVisualStyleBackColor = true;
+            this.checkBox2.Visible = false;
             // 
             // SymbolizeByDialog
             // 

@@ -81,6 +81,10 @@ namespace GAWetlands
 
                 ESRI.ArcGIS.Geodatabase.IObjectClassDescription objectClassDescription = new ESRI.ArcGIS.Geodatabase.FeatureClassDescriptionClass();
                 IFields flds = objectClassDescription.RequiredFields;
+                IFieldEdit fld_Edit = (IFieldEdit)flds.get_Field(flds.FindField("Shape"));
+
+                IGeometryDefEdit pGeoDef = (IGeometryDefEdit) fld_Edit.GeometryDef;
+                pGeoDef.SpatialReference_2 = igd_dest.SpatialReference;
 
                 IFeatureClass ifc_new = workspace.CreateFeatureClass("AAA", flds, null, null, esriFeatureType.esriFTSimple, ifl_active.FeatureClass.ShapeFieldName, "");
                 IFeatureLayer fl = new FeatureLayerClass();
@@ -97,26 +101,32 @@ namespace GAWetlands
                 fl.Name = "IntersectingShape";
 
                 ISimpleFillSymbol sfs = new SimpleFillSymbolClass();
-                sfs.Outline.Color = color;
+                
+                ISimpleLineSymbol sls = new SimpleLineSymbolClass();
+                sls.Color = color;
+                sls.Width = 4.0;
+                sls.Style = esriSimpleLineStyle.esriSLSSolid;
 
                 color.NullColor = true;
-                sfs.Color = color;
 
-                sfs.Outline.Width = 5;
+                sfs.Color = color;
+                sfs.Outline = sls ;
 
                 ISimpleRenderer isr = new SimpleRendererClass();
                 isr.Symbol = (ISymbol)sfs;
 
                 gfl.Renderer = (IFeatureRenderer)isr;
-                gfl.SpatialReference = igd_dest.SpatialReference;
-
+                
+                IObjectCopy cpy = new ObjectCopyClass();
+                
                 iwe.StartEditing(true);
                 iwe.StartEditOperation();
 
                 IFeatureBuffer fb = ifc_new.CreateFeatureBuffer();
                 IFeatureCursor csri = ifc_new.Insert(false);
-                
+
                 fb.Shape = geometry;
+
                 csri.InsertFeature(fb);
                 csri.Flush();
 
@@ -292,7 +302,13 @@ namespace GAWetlands
 
                 ITopologicalOperator ito = (ITopologicalOperator)geometry;
 
-                string input = Microsoft.VisualBasic.Interaction.InputBox("Enter radius to use in map units: ", "Radius for Buffered Clip", "500");
+                IMap mp = ArcMap.Document.FocusMap;
+                ISpatialReference isr = mp.SpatialReference;
+                
+                IProjectedCoordinateSystem ipcs = (IProjectedCoordinateSystem)isr;
+                ILinearUnit ilu = ipcs.CoordinateUnit;
+                
+                string input = Microsoft.VisualBasic.Interaction.InputBox("Enter radius to use in map units ("+ ((ilu.Name.IndexOf("Foot", StringComparison.CurrentCultureIgnoreCase) > -1)? "feet" : ilu.Name.ToLower() + "s") +"): ", "Radius for Buffered Clip", "500");
                 double distance = double.Parse(input);
 
                 IGeometry circle = ito.Buffer(distance);
@@ -301,6 +317,7 @@ namespace GAWetlands
             }
             catch (Exception e)
             {
+                SelectArrowToolOnToolbar();
             }
         }
     }

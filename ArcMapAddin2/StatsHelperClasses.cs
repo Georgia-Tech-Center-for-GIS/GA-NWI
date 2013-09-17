@@ -136,6 +136,9 @@ namespace GAWetlands
         }
 
         private double[] measuresInCurrentUnits = new double[] { double.NaN, double.NaN, double.NaN, double.NaN, double.NaN, double.NaN, double.NaN, double.NaN };
+
+        public string CoordinateSystem = "";
+
         private const int NumDecimals = 2;
 
         public const int CountIndex = 2;
@@ -244,6 +247,11 @@ namespace GAWetlands
         {
             double value = double.NaN;
 
+            if (CoordinateSystem == "")
+            {
+                CoordinateSystem = ((IFeature)rw).Shape.SpatialReference.Name;
+            }
+
             if (this.LinearUnit == null || this.LinearUnit == "")
             {
                 if (fieldTier == 2)
@@ -269,7 +277,7 @@ namespace GAWetlands
                     currentLinearUnit = esriUnits.esriMeters;
                 }
             }
-            else if (LinearUnit.IndexOf("feet", 0, StringComparison.CurrentCultureIgnoreCase) > -1)
+            else if (LinearUnit.IndexOf("foot", 0, StringComparison.CurrentCultureIgnoreCase) > -1)
             {
                 if (useArealUnit)
                 {

@@ -9,4 +9,6 @@ C:\Documents and Settings\gtg221h\my documents\visual studio 2010\Projects\ArcMa
 C:\Documents and Settings\gtg221h\my documents\visual studio 2010\Projects\ArcMapAddin2\ArcMapAddin2\obj\Debug\GAWetlands.NWIQuery.resources
 C:\Documents and Settings\gtg221h\my documents\visual studio 2010\Projects\ArcMapAddin2\ArcMapAddin2\obj\Debug\GAWetlands.NWIPlusQuery.resources
 C:\Documents and Settings\gtg221h\my documents\visual studio 2010\Projects\ArcMapAddin2\ArcMapAddin2\obj\Debug\GAWetlands.SymbolizeByDialog.resources
-C:\Documents and Settings\gtg221h\my documents\visual studio 2010\Projects\ArcMapAddin2\ArcMapAddin2\bin\Debug\GAWetlands.esriAddIn
+C:\Documents and Settings\gtg221h\my documents\visual studio 2010\Projects\ArcMapAddin2\ArcMapAddin2\obj\Debug\GAWetlands.DescriptionBrowser.resources
+C:\Documents and Settings\gtg221h\my documents\visual studio 2010\Projects\ArcMapAddin2\ArcMapAddin2\obj\Debug\GAWetlands.CombinedQueryForm.resources
+C:\Documents and Settings\gtg221h\My Documents\Visual Studio 2010\Projects\ArcMapAddin2\ArcMapAddin2\bin\Debug\GAWetlands.esriAddIn

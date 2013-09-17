@@ -15,7 +15,7 @@ using ESRI.ArcGIS.Geoprocessing;
 
 namespace GAWetlands
 {
-    class QueryHelperClass
+    public class QueryHelperClass
     {
         public System.Collections.Generic.List<string> LastQueryStrings = new System.Collections.Generic.List<string>();
 

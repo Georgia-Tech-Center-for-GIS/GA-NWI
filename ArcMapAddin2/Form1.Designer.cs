@@ -205,6 +205,7 @@
             this.checkBox1.TabIndex = 8;
             this.checkBox1.Text = "Select Features";
             this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.Visible = false;
             // 
             // progressBar1
             // 

@@ -101,6 +101,9 @@
       <SpecificVersion>False</SpecificVersion>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="ESRI.ArcGIS.GeoprocessingUI, Version=10.0.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=x86">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="ESRI.ArcGIS.Geoprocessor, Version=10.0.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
@@ -129,6 +132,12 @@
   <ItemGroup>
     <Compile Include="ArcGISAddin1.cs" />
     <Compile Include="ClipNWIByPolygon.cs" />
+    <Compile Include="CombinedQueryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CombinedQueryForm.Designer.cs">
+      <DependentUpon>CombinedQueryForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Config.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Config.esriaddinx</DependentUpon>
@@ -144,6 +153,12 @@
     </Compile>
     <Compile Include="Form2.Designer.cs">
       <DependentUpon>Form2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DescriptionBrowser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DescriptionBrowser.Designer.cs">
+      <DependentUpon>DescriptionBrowser.cs</DependentUpon>
     </Compile>
     <Compile Include="NWIPlusQuery.cs">
       <SubType>Form</SubType>
@@ -258,6 +273,12 @@
     </AddInContent>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="CombinedQueryForm.resx">
+      <DependentUpon>CombinedQueryForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DescriptionBrowser.resx">
+      <DependentUpon>DescriptionBrowser.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -367,6 +388,25 @@
   </ItemGroup>
   <ItemGroup>
     <AddInContent Include="Install\Symbology\Subclass.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
+    <AddInContent Include="Install\Help\Georgia NWI Tools.chm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+    <AddInContent Include="Install\Parser\NWI Tools.tbx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Images\Help.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Images\Parse.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </AddInContent>
   </ItemGroup>
