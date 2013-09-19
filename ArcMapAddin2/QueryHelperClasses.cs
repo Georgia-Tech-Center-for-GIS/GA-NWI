@@ -17,6 +17,8 @@ namespace GAWetlands
 {
     public class QueryHelperClass
     {
+        protected string field = "";
+
         public System.Collections.Generic.List<string> LastQueryStrings = new System.Collections.Generic.List<string>();
 
         protected static string GetAssemblyPath()
@@ -28,7 +30,7 @@ namespace GAWetlands
             return asmPath;
         }
 
-        public ICursor doQueryItems(string field, string[] values)
+        public ICursor doQueryItems(string[] values)
         {
             if (values == null || values.Length == 0)
             {
@@ -40,7 +42,7 @@ namespace GAWetlands
                 IFeatureLayer2 ifl2 = (IFeatureLayer2)ArcMap.Document.SelectedLayer;
                 IGeoFeatureLayer igfl = (IGeoFeatureLayer)ifl2;
                 ITable tbl = (ITable)((IFeatureLayer)igfl).FeatureClass;
-                IQueryFilter qf = getQueryFilter(field, values);
+                IQueryFilter qf = getQueryFilter(values);
 
                 LastQueryStrings.Clear();
                 LastQueryStrings.Add(qf.WhereClause);
@@ -59,13 +61,20 @@ namespace GAWetlands
             return null;
         }
 
-        public virtual IQueryFilter getQueryFilter(string field, string[] values)
+        public virtual IQueryFilter getQueryFilter(string[] values)
         {
             IQueryFilter qf = new QueryFilterClass();
 
             for (int ii = 0; ii < values.Length; ii++)
             {
-                qf.WhereClause = qf.WhereClause + " " + field + "='" + values[ii] + "'";// +((ii <= (values.Length - 1)) ? "" : "OR ");
+                if (values[ii].IndexOf("=") > -1)
+                {
+                    qf.WhereClause = qf.WhereClause + " (" + values[ii] + ") ";
+                }
+                else
+                {
+                    qf.WhereClause = qf.WhereClause + " " + field + "='" + values[ii] + "'";// +((ii <= (values.Length - 1)) ? "" : "OR ");
+                }
 
                 if (ii < (values.Length - 1))
                     qf.WhereClause += " OR ";
@@ -105,6 +114,8 @@ namespace GAWetlands
             {
                 s[j] = iuvr.Label[iuvr.Value[j]] + " (" + iuvr.Value[j] + ")";
             }
+
+            field = queryType;
 
             return s;
         }
@@ -159,10 +170,12 @@ namespace GAWetlands
                 values[i] = valuesAndLabels[i][2] + " (" + valuesAndLabels[i][0] + "; " + valuesAndLabels[i][1] + ")";
             }
 
+            field = queryType;
+
             return values;
         }
 
-        public override IQueryFilter getQueryFilter(string field, string[] values)
+        public override IQueryFilter getQueryFilter(string[] values)
         {
             IQueryFilter qf = new QueryFilterClass();
 
@@ -232,6 +245,9 @@ namespace GAWetlands
 
             values[valuesAndLabels.Count] = "All Subtidal (E, M; 1)";
             values[valuesAndLabels.Count + 1] = "All Intertidal (E, M; 2)";
+
+            field = queryType;
+
             return values;
         }
     }
@@ -242,24 +258,56 @@ namespace GAWetlands
         {
             ESRI.ArcGIS.Carto.ILayerFile layerFile = new LayerFileClass();
             //layerFile.Open("\\\\tornado\\Research3\\Tony\\Wetlands\\wetlands10.1\\10.0\\" + queryType + "_Poly.lyr");
-            layerFile.Open(GetAssemblyPath() + "\\Symbology\\LLWW_" + queryType + "_Polygon"+ fileSuffix +".lyr");
+            layerFile.Open(GetAssemblyPath() + "\\Symbology\\NWIPlus" + fileSuffix + ".lyr");
 
             IGeoFeatureLayer igfl_lyr = (IGeoFeatureLayer)layerFile.Layer;
             IUniqueValueRenderer iuvr = (IUniqueValueRenderer)igfl_lyr.Renderer;
 
-            string[] s = new string[iuvr.ValueCount];
+            field = queryType;
 
-            for (int j = 0; j < iuvr.ValueCount; j++)
+            if (iuvr.FieldCount == 1)
             {
-                s[j] = iuvr.Label[iuvr.Value[j]] + " (" + iuvr.Value[j] + ")";
-            }
+                string[] s = new string[iuvr.ValueCount];
 
-            return s;
+                for (int j = 0; j < iuvr.ValueCount; j++)
+                {
+                    s[j] = iuvr.Label[iuvr.Value[j]] + " (" + iuvr.Value[j] + ")";
+                }
+
+                return s;
+            }
+            else
+            {
+                string[] s = new string[iuvr.ValueCount];
+                string WhereClause = "";
+
+                char[] delimiter = { iuvr.FieldDelimiter[0] };
+
+                string prefix = ""; //sql.GetSpecialCharacter(esriSQLSpecialCharacters.esriSQL_DelimitedIdentifierPrefix);
+                string suffix = ""; //'sql.GetSpecialCharacter(esriSQLSpecialCharacters.esriSQL_DelimitedIdentifierSuffix);
+
+                for (int j = 0; j < iuvr.ValueCount; j++)
+                {
+                    WhereClause = "";
+                    string[] currValues = iuvr.Value[j].Split(delimiter);
+
+                    for (int k = 0; k < currValues.Length; k++)
+                    {
+                        if (k > 0)
+                            WhereClause += " AND ";
+
+                        WhereClause += prefix + iuvr.Field[k] + suffix + " = '" + currValues[k].Trim() + "'";
+                    }
+
+                    s[j] = iuvr.Label[ iuvr.Value[j] ] + " (" + WhereClause + ")";
+                }
+                return s;
+            }
         }
 
-        public override IQueryFilter getQueryFilter(string field, string[] values)
+        public override IQueryFilter getQueryFilter(string[] values)
         {
-            return base.getQueryFilter(field, values);
+            return base.getQueryFilter(values);
         }
 
         public override string[] getQueryValues(ListBox lb)
@@ -291,9 +339,9 @@ namespace GAWetlands
             return s;
         }
 
-        public override IQueryFilter getQueryFilter(string field, string[] values)
+        public override IQueryFilter getQueryFilter(string[] values)
         {
-            return base.getQueryFilter(field, values);
+            return base.getQueryFilter(values);
         }
 
         public override string[] getQueryValues(ListBox lb)

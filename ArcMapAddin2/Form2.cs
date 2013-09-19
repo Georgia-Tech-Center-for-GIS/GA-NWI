@@ -60,7 +60,7 @@ namespace GAWetlands
 
                 if (shc.DoConversion(tsi.Text))
                 {
-                    for (int i = 3; i < 8; i++)
+                    for (int i = 1; i < 6; i++)
                     {
                         double value = double.NaN;
                         switch (i)
@@ -85,7 +85,7 @@ namespace GAWetlands
                         dataGridView1[colIndex, i].Value = value;
                     }
 
-                    dataGridView1[colIndex, StatHelperClass.RangeIndex].Value = shc.range;
+//                    dataGridView1[colIndex, StatHelperClass.RangeIndex].Value = shc.range;
                     dataGridView1[colIndex, 1].Value = tsi.Text;
                 }
             }

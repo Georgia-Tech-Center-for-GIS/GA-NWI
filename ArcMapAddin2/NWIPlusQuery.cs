@@ -128,7 +128,7 @@ namespace GAWetlands
                 //dataGridView1.Rows.Add(new object[] { "Query Started" });
 
                 string[] queryValues = qhc.getQueryValues(listBox2);
-                ICursor csr = qhc.doQueryItems(selectedRadio, queryValues);
+                ICursor csr = qhc.doQueryItems(queryValues);
 
                 IRow rw = null;
 
@@ -187,7 +187,7 @@ namespace GAWetlands
                     else 
                     if (checkBox1.Checked)
                     {
-                        IQueryFilter iqf = qhc.getQueryFilter(selectedRadio, queryValues);
+                        IQueryFilter iqf = qhc.getQueryFilter(queryValues);
                         IFeatureLayer2 ifl2 = (IFeatureLayer2)ArcMap.Document.SelectedLayer;
                         IGeoFeatureLayer igfl = (IGeoFeatureLayer)ifl2;
                         //ITable tbl = (ITable)((IFeatureLayer)igfl).FeatureClass;

@@ -109,21 +109,39 @@ namespace GAWetlands
 
     public class BtnQueryCombined : NWIQueryButton
     {
+        private static CombinedQueryForm qf = new CombinedQueryForm();
         protected override void OnClick()
         {
-            CombinedQueryForm qf = new CombinedQueryForm();
-            qf.Show();
+            try
+            {
+                if ((System.Windows.Forms.Application.OpenForms["CombinedQueryForm"] as CombinedQueryForm) == null)
+                    qf.Show();
+            }
+            catch (Exception ggg)
+            {
+                qf = new CombinedQueryForm();
+                qf.Show();
+            }
+
             base.OnClick();
         }
     }
     
     public class BtnSymbolize_Universal : BtnSymbolize_Base
     {
+        private static SymbolizeByDialog sbd = new SymbolizeByDialog();
         protected override void OnClick()
         {
-            SymbolizeByDialog sbd = new SymbolizeByDialog();
-            sbd.Show(); // ShowDialog();
-
+            try
+            {
+                if ((System.Windows.Forms.Application.OpenForms["SymbolizeByDialog"] as SymbolizeByDialog) == null)
+                    sbd.Show(); // ShowDialog();
+            }
+            catch (Exception ggg)
+            {
+                sbd = new SymbolizeByDialog();
+                sbd.Show();
+            }
             //doSymbolize("Waterbody");
         }
     }

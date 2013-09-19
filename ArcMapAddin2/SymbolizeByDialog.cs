@@ -13,6 +13,7 @@ using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.Geoprocessing;
 using ESRI.ArcGIS.esriSystem;
 using ESRI.ArcGIS.Display;
+using System.Text.RegularExpressions;
 
 namespace GAWetlands
 {
@@ -33,8 +34,10 @@ namespace GAWetlands
 
         private static Geoprocessor gp = new Geoprocessor();
 
-        private static void doSymbolizeLayer(IActiveView activeView, int i, string symbType, bool doRemove, string filenamePrefix, string filenameSuffix)
+        private static void doSymbolizeLayer(IActiveView activeView, int i, string fieldName, bool doRemove, string filenamePrefix, string filenameSuffix, string filename)
         {
+            if (filename == "") filename = fieldName;
+
             try
             {
                 if (ArcMap.Document.SelectedLayer == null)
@@ -45,15 +48,15 @@ namespace GAWetlands
 
                 IFeatureLayer ifl = (IFeatureLayer)ArcMap.Document.SelectedLayer;
 
-                if (symbType == "Chemistry1" && ifl.FeatureClass.FindField(symbType) < 0)
+                if (fieldName == "Chemistry1" && ifl.FeatureClass.FindField(fieldName) < 0)
                 {
                     //try Chem if Chemistry1 not found
-                    symbType = "Chem";
+                    fieldName = "Chem";
                 }
 
-                if (ifl.FeatureClass.FindField(symbType) < 0)
+                if (ifl.FeatureClass.FindField(fieldName) < 0)
                 {
-                    System.Windows.Forms.MessageBox.Show("Selected layer does not contain the " + symbType + " field and can't be symbolized " +
+                    System.Windows.Forms.MessageBox.Show("Selected layer does not contain the " + fieldName + " field and can't be symbolized " +
                         "with this tool. Select another layer to continue.");
                     return;
                 }
@@ -66,31 +69,32 @@ namespace GAWetlands
                 var asmPath = GetAssemblyPath();
 
                 ILayerFile layerFile = new LayerFileClass();
-                
-                if (filenameSuffix != "Rated")
+
+                if (filenamePrefix == "NWIPlus")
                 {
-                    if (symbType == "Chem")
+                    layerFile.Open(asmPath + "/Symbology/" + filenamePrefix + filename + ".lyr");
+                }
+                else
+                {
+                    if (fieldName == "Chem")
                     {
                         layerFile.Open(asmPath + "/Symbology/" + filenamePrefix + "Chemistry1" + "_" + geomTypeName + filenameSuffix + ".lyr");
                     }
                     else
                     {
-                        layerFile.Open(asmPath + "/Symbology/" + filenamePrefix + symbType + "_" + geomTypeName + filenameSuffix + ".lyr");
+                        layerFile.Open(asmPath + "/Symbology/" + filenamePrefix + filename + "_" + geomTypeName + filenameSuffix + ".lyr");
                     }
-                }
-                else
-                {
-                    layerFile.Open(asmPath + "/Symbology/" + filenamePrefix + "Rated_" + geomTypeName + ".lyr");
                 }
 
                 IGeoFeatureLayer igfl = (IGeoFeatureLayer)layerFile.Layer;
                 IUniqueValueRenderer iuvr = (IUniqueValueRenderer)igfl.Renderer;
                 IUniqueValueRenderer iuvr_new = iuvr;
 
+#if false
                 if( filenameSuffix == "Rated") {
                     iuvr_new = new UniqueValueRendererClass();
                     iuvr_new.FieldCount = 1;
-                    iuvr_new.Field[0] = symbType;
+                    iuvr_new.Field[0] = fieldName;
                     iuvr_new.DefaultSymbol = iuvr.DefaultSymbol;
                     iuvr_new.UseDefaultSymbol = false;
 
@@ -100,9 +104,10 @@ namespace GAWetlands
                     for (int l = 0; l < iuvr.ValueCount; l++)
                     {
                         //iuvr.Heading[iuvr.Value[l]] = symbType;
-                        iuvr_new.AddValue(iuvr.Value[l], symbType, iuvr.Symbol[iuvr.Value[l]]);
+                        iuvr_new.AddValue(iuvr.Value[l], fieldName, iuvr.Symbol[iuvr.Value[l]]);
                     }
                 }
+#endif
 
                 /*ILegendInfo li = (ILegendInfo)iuvr;
                 ILegendGroup gp = (ILegendGroup)li.LegendGroup[0];
@@ -119,6 +124,7 @@ namespace GAWetlands
 
                 List<string> values = new List<string>();
 
+#if false
                 for (int k0 = 0; k0 < iuvr_new.ValueCount; k0++)
                 {
                     try
@@ -130,6 +136,7 @@ namespace GAWetlands
                     catch(Exception abcd) {
                     }
                 }
+#endif
                 
                 if (doRemove)
                 {
@@ -137,7 +144,6 @@ namespace GAWetlands
 
                     for (int j = 0; j < vCount; j++)
                     {
-
                         f.WhereClause = "";
                         string[] currValues = iuvr_new.Value[j].Split(delimiter);
 
@@ -184,7 +190,7 @@ namespace GAWetlands
                 }
                 else
                 {
-                    System.Windows.Forms.MessageBox.Show("No unique values other than null or blank found. No changes will be made to the symbology");
+                    System.Windows.Forms.MessageBox.Show("No values found. No changes will be made to the symbology");
                     return;
                 }
                 //ArcMap.Document.CurrentContentsView.Deactivate();
@@ -262,7 +268,7 @@ namespace GAWetlands
 
             if (dslc.hsToRemove.Count == oldCount)
             {
-                System.Windows.Forms.MessageBox.Show("No unique values other than null or blank found. No changes will be made to the symbology");
+                System.Windows.Forms.MessageBox.Show("No values found. No changes will be made to the symbology");
                 return;
             }
 
@@ -291,10 +297,10 @@ namespace GAWetlands
             return asmPath;
         }
 
-        protected void doSymbolize(string type, string prefix, string filename)
+        protected void doSymbolize(string type, string prefix, string suffix, string filename)
         {
             IActiveView iav = ArcMap.Document.ActiveView;
-            doSymbolizeLayer(iav, 0, type, checkBox2.Checked, prefix, filename);
+            doSymbolizeLayer(iav, 0, type, checkBox2.Checked, prefix, suffix, filename);
         }
 
         public SymbolizeByDialog()
@@ -304,7 +310,16 @@ namespace GAWetlands
         }
 
         private string[] NWICats = { "System", "Class", "Water Regime", "Chemistry", "Soil","Special Modifier" };
-        private string[] NWIPlusCats = { "Landscape", "Landform", "Waterflow", "Waterbody",
+        private string[] NWIPlusCats = { "Landscape",
+                                         "Landscape Type",
+                                         "Landform",
+                                         "Landform Type",
+                                         "Waterflow",
+                                         "Waterbody",
+                                         "Waterbody (Flow)",
+                                         "Waterbody (Modifier)",
+                                         "Waterbody (Type)",
+                                         "Waterbody (Other Modifier)",
                                        "Surface Water Detention",
                                        "Coast Storm Surge Detention",
                                        "Streamflow Maintenance",
@@ -317,10 +332,6 @@ namespace GAWetlands
                                        "Provision of Other Wildlife Habitat",
                                        "Provision of Unique/Uncommon/Highly Diverse Wetlant Plant Communities"};
 
-        private string[] NWIPlusLandscapeMods = { "Lotic", "Lentic", "Estuary" };
-        private string[] NWIPlusLandformMods = { "Coastal", "Inland" };
-        private string[] NWIPlusWaterbodyMods = { "Estuary", "Lake", "OceanBay", "Pond", "River", "Stream" };
-
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
             if ( (bUseNwi = radioButton1.Checked) )
@@ -331,12 +342,6 @@ namespace GAWetlands
                     comboBox1.Items.Add(NWICats[i]);
 
                 comboBox1.SelectedIndex = 0;
-
-                comboBox2.Items.Clear();
-                comboBox2.Enabled = false;
-
-                checkBox1.Checked = false;
-                checkBox1.Enabled = false;
             }
         }
 
@@ -350,15 +355,14 @@ namespace GAWetlands
                     comboBox1.Items.Add(NWIPlusCats[i]);
 
                 comboBox1.SelectedIndex = 0;
-
-                checkBox1.Checked = false;
-                checkBox1.Enabled = true;
             }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             string fieldName = "";
+            string filename = "";
+
             string filenameSuffix = "";
             string filenamePrefix = "";
 
@@ -387,7 +391,7 @@ namespace GAWetlands
             else // NWI PLUS
             {
                 fieldName = comboBox1.SelectedItem.ToString();
-                filenamePrefix = "LLWW_";
+                filenamePrefix = "NWIPlus";
 
                 switch (fieldName)
                 {
@@ -404,64 +408,86 @@ namespace GAWetlands
                     case "Waterbody":
                         break;
 
+                    default:
+                        filename = Regex.Replace(fieldName, "[\\(\\) ]", ""); //fieldName.Replace(" ", "");
+                        fieldName = fieldName.Split(' ')[0];
+                        break;
+
                     case "Surface Water Detention":
                         fieldName = "Surf_Water";
+                        filename = "SWD";
+
                         goto case "Rated";
 
                     case "Coast Storm Surge Detention":
                         fieldName = "Coast_Stor";
+                        filename = "CSSD";
+
                         goto case "Rated";
 
                     case "Streamflow Maintenance":
                         fieldName = "Stream_Mai";
+                        filename = "SM";
+
                         goto case "Rated";
 
                     case "Nutrient Transformation":
                         fieldName = "Nutrnt_Tra";
+                        filename = "NT";
+
                         goto case "Rated";
 
                     case "Carbon Sequestration":
                         fieldName = "Carbon_Seq";
+                        filename = "CS";
+
                         goto case "Rated";
 
                     case "Sediment Particulate Retention":
                         fieldName = "Sed_Part_R";
+                        filename = "SR";
+
                         goto case "Rated";
 
                     case "Bank / Shoreline Stabilization":
                         fieldName = "Bank_Shore";
+                        filename = "BS";
+
                         goto case "Rated";
 
                     case "Provision of Fish/Aquatic Invertebrate Habitat":
                         fieldName = "Prov_Fish_";
+                        filename = "ProvFish";
+
                         goto case "Rated";
 
                     case "Provision of Waterfowl and Waterbird Habitat":
                         fieldName = "Prov_WFowl";
+                        filename = "ProvBird";
+
                         goto case "Rated";
 
                     case "Provision of Other Wildlife Habitat":
                         fieldName = "Prov_Other";
+                        filename = "ProvOtherWildHab";
+
                         goto case "Rated";
 
                     case "Provision of Unique/Uncommon/Highly Diverse Wetlant Plant Communities":
                         fieldName = "Prov_Hab_U";
+                        filename = "ProvUWPC";
+
                         goto case "Rated";
 
                     case "Rated":
                         filenameSuffix = "Rated";
                         break;
                 }
-
-                if (checkBox1.Checked && comboBox2.SelectedItem != null)
-                {
-                    filenameSuffix = "Modifier" + comboBox2.SelectedItem.ToString();
-                }
             }
 
             try
             {
-                doSymbolize(fieldName, filenamePrefix, filenameSuffix);
+                doSymbolize(fieldName, filenamePrefix, filenameSuffix, filename);
             }
             catch (Exception eee)
             {
@@ -475,51 +501,11 @@ namespace GAWetlands
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            comboBox2.Items.Clear();
-            comboBox2.Enabled = checkBox1.Checked;
-
-            if (comboBox2.Enabled)
-            {
-                comboBox1_SelectionChangeCommitted(null, null);
-            }
         }
 
         private void comboBox1_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            if (!bUseNwi)
-            {
-                comboBox2.Items.Clear();
-                string[] ptr = null;
 
-                switch (comboBox1.SelectedItem.ToString())
-                {
-                    case "Landscape":
-                        ptr = NWIPlusLandscapeMods;
-                        break;
-                    case "Landform":
-                        ptr = NWIPlusLandformMods;
-                        break;
-                    case "Waterbody":
-                        ptr = NWIPlusWaterbodyMods;
-                        break;
-                }
-
-                if (ptr != null)
-                {
-                    for (int j = 0; j < ptr.Count(); j++)
-                    {
-                        comboBox2.Items.Add(ptr[j]);
-                    }
-
-                    comboBox2.Enabled = true;
-                    comboBox2.SelectedIndex = 0;
-                }
-                else
-                {
-                    comboBox2.Items.Clear();
-                    comboBox2.Enabled = false;
-                }
-            }
         }
     }
 }

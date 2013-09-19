@@ -15,14 +15,6 @@
       <Toolbars>
         <Toolbar id="Wetlands_Georgia_Wetlands" caption="Georgia Wetlands" showInitially="true">
           <Items>
-            <!--Button refID="BtnSymbolize_System"></Button>
-            <Button refID="BtnSymbolize_Class"></Button>
-            <Button refID="BtnSymbolize_Regime"></Button>
-            <Button refID="BtnSymbolize_Special"></Button>
-            <Button refID="BtnSymbolize_Chemistry"></Button>
-            <Button refID="BtnSymbolize_Soil"></Button -->
-            <!--ComboBox refID="NWIQueryComboBox"></ComboBox-->
-
             <Button refID="Btn_InvokeParser"></Button>
             <Button refID="BtnHelp"></Button>
             <Button refID="BtnSymbolize_Universal"></Button>
@@ -31,57 +23,21 @@
             
             <Button refID="BtnQuery_NWICombined"></Button>
 
-            <!--Tool refID="BtnClipByPolygon"></Tool>
-            <Tool refID="BtnClipByRadius"></Tool-->
-            
           </Items>
         </Toolbar>
-        <!--Toolbar id="Wetlands_Georgia_Plus" caption="Georgia Wetlands NWI Plus" showInitially="true" >
-          <Items>
-            <Button refID="BtnSymbolize_Landform"></Button>
-            <Button refID="BtnSymbolize_Landscape"></Button>
-            <Button refID="BtnSymbolize_Waterflow"></Button>
-
-            <Button refID="BtnQuery_NWIPlus"></Button>
-
-            <Tool refID="BtnClipByPolygon"></Tool>
-            <Tool refID="BtnClipByRadius"></Tool>
-          </Items>
-        </Toolbar-->
       </Toolbars>
       <Commands>
-        <!--Button id="BtnSymbolize_System"    class="BtnSymbolize_System"     message="." caption="Symbolize by System" tip="Symbolize by System." category="NWI" onDemand="false"                         image="Images\BtnSymbolize_System.png"/>
-        <Button id="BtnSymbolize_Class"     class="BtnSymbolize_Class"      message="." caption="Symbolize by Class" tip="Symbolize by Class." category="NWI" onDemand="false"                           image="Images\BtnSymbolize_Class.png"/>
-        <Button id="BtnSymbolize_Regime"    class="BtnSymbolize_Regime"     message="." caption="Symbolize by Water Regime" tip="Symbolize by Water Regime." category="NWI" onDemand="false"             image="Images\BtnSymbolize_Water.png"/>
-        <Button id="BtnSymbolize_Special"   class="BtnSymbolize_Special"    message="." caption="Symbolize by Special Modifier" tip="Symbolize by Special Modifier." category="NWI" onDemand="false"     image="Images\BtnSymbolize_Special.png"/>
-        <Button id="BtnSymbolize_Chemistry" class="BtnSymbolize_Chemistry"  message="." caption="Symbolize by Chemistry" tip="Symbolize by Chemistry." category="NWI" onDemand="false"                   image="Images\BtnSymbolize_Chem.png"/>
-        <Button id="BtnSymbolize_Soil"      class="BtnSymbolize_Soil"       message="." caption="Symbolize by Soil" tip="Symbolize by Soil." category="NWI" onDemand="false"                             image="Images\BtnSymbolize_Soil.png"/>
-
-        <Button id="BtnSymbolize_Landscape" class="BtnSymbolize_Landscape"  message="." caption="Symbolize by Landscape" tip="Symbolize by Landscape" category="NWI Plus" onDemand="false"></Button>
-        <Button id="BtnSymbolize_Landform"  class="BtnSymbolize_Landform"  message="."  caption="Symbolize by Landform" tip="Symbolize by Landscape" category="NWI Plus" onDemand="false"></Button>
-        <Button id="BtnSymbolize_Waterform"  class="BtnSymbolize_Waterform"  message="."  caption="Symbolize by Waterflow" tip="Symbolize by Landscape" category="NWI Plus" onDemand="false"></Button>
-        <Button id="BtnSymbolize_Waterbody"  class="BtnSymbolize_Waterbody"  message="."  caption="Symbolize by Waterbody" tip="Symbolize by Landscape" category="NWI Plus" onDemand="false"             image="Images\BtnSymbolize_Water_Plus.png"></Button-->
-        <Button id="BtnHelp" class="BtnHelp" category="NWI" message="." caption ="NWI Descriptions" image="Images\Help.png"></Button>
-        <Button id="BtnSymbolize_Universal" class="BtnSymbolize_Universal" message="." caption="Symbolize by predefined NWI/NWI+ layer symbology." tip="Symbolize by NWI/NWI+" category="NWI" onDemand="false" image="Images\BtnSymbolize_Water_Plus.png"></Button>
-
-        <!--Button id="BtnNWIQuery" class="BtnQueryAll" category="NWI" image="Images\sigma.png" caption="NWI (Cowardin) Query"></Button>
-        <Button id="BtnQuery_NWIPlus" class="BtnQueryNWIPlus" category="NWI" image="Images\sigma_plus.png" caption="NWI+ (LLWW) Query"></Button-->
+        <Button id="BtnHelp" class="BtnHelp" category="NWI" caption ="NWI Descriptions" image="Images\Help.png"></Button>
+        <Button id="BtnSymbolize_Universal" class="BtnSymbolize_Universal" caption="Symbolize by predefined NWI symbology" category="NWI" onDemand="false" image="Images\BtnSymbolize_Water_Plus.png"></Button>
 
         <Button id="BtnQuery_NWICombined" class="BtnQueryCombined" category="NWI" image="Images\sigma_plus.png" caption="NWI+ (LLWW) Query"></Button>
 
         <Button id="Btn_InvokeParser" class="BtnInvokeParser" category="NWI" caption="Parse NWI Features" onDemand="false" image="Images\Parse.png"></Button>
         
-        <Tool id="BtnClipByPolygon" class="ClipNWIByPolygon" message="." caption="Clip NWI by polygon" category="NWI" image="Images\polygon.png" />
-        <Tool id="BtnClipByRadius" class="ClipNWIByRadius" message="." caption="Clip NWI by radius from selected point." category="NWI" image="Images\point.png"/>
+        <Tool id="BtnClipByPolygon" class="ClipNWIByPolygon" caption="Clip NWI by polygon" category="NWI" image="Images\polygon.png" />
+        <Tool id="BtnClipByRadius" class="ClipNWIByRadius" caption="Clip NWI by radius from selected point." category="NWI" image="Images\point.png"/>
 
-        <!--<ToolPalette id="Georgia_Tech_GAWetlands_My_Tool_Query" caption="My Tool Palette" category="Add-In Controls" isMenuStyle="true" columns="0">
-          <Items>
-            <Button refID="BtnNWIQuery"></Button>
-            <Button refID="BtnQuery_NWIPlus"></Button>
-          </Items>
-        </ToolPalette> -->
-        
-        <ToolPalette id="Georgia_Tech_GAWetlands_My_Tool_Palette" caption="My Tool Palette" category="Add-In Controls" isMenuStyle="true" columns="0">
+        <ToolPalette id="Georgia_Tech_GAWetlands_My_Tool_Palette" caption="NWI Clipping Tools" category="Add-In Controls" isMenuStyle="true" columns="0">
           <Items>
             <Tool refID="BtnClipByPolygon" />
             <Tool refID="BtnClipByRadius" />

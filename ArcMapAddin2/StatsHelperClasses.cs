@@ -141,12 +141,12 @@ namespace GAWetlands
 
         private const int NumDecimals = 2;
 
-        public const int CountIndex = 2;
-        public const int SumIndex = 3;
-        public const int MinIndex = 4;
-        public const int MaxIndex = 5;
-        public const int MeanIndex = 6;
-        public const int RangeIndex = 7;
+        public const int CountIndex = 1;
+        public const int SumIndex = 2;
+        public const int MinIndex = 3;
+        public const int MaxIndex = 4;
+        public const int MeanIndex = 5;
+        //public const int RangeIndex = 7;
 
         public double sum
         {

@@ -148,7 +148,7 @@ namespace GAWetlands
                 //dataGridView1.Rows.Add(new object[] { "Query Started" });
 
                 string[] queryValues = qhc.getQueryValues(listBox2);
-                ICursor csr = qhc.doQueryItems(selectedRadio, queryValues);
+                ICursor csr = qhc.doQueryItems(queryValues);
 
                 IRow rw = null;
 
@@ -207,7 +207,7 @@ namespace GAWetlands
                     else
                     if (checkBox1.Checked)
                     {
-                        IQueryFilter iqf = qhc.getQueryFilter(selectedRadio, queryValues);
+                        IQueryFilter iqf = qhc.getQueryFilter(queryValues);
                         IFeatureLayer2 ifl2 = (IFeatureLayer2)ArcMap.Document.SelectedLayer;
                         IGeoFeatureLayer igfl = (IGeoFeatureLayer)ifl2;
                         //ITable tbl = (ITable)((IFeatureLayer)igfl).FeatureClass;
@@ -377,27 +377,27 @@ namespace GAWetlands
 
                     if (dataGridView1.Rows.Count > 0)
                     {
-                        dataGridView1.Rows[0].Cells[colIndex].Value = shc[j].CoordinateSystem;
-                        dataGridView1.Rows[1].Cells[colIndex].Value = shc[j].LinearUnit;
-                        dataGridView1.Rows[2].Cells[colIndex].Value = shc[j].count;
-                        dataGridView1.Rows[3].Cells[colIndex].Value = shc[j].sum;
-                        dataGridView1.Rows[4].Cells[colIndex].Value = shc[j].min;
-                        dataGridView1.Rows[5].Cells[colIndex].Value = shc[j].max;
-                        dataGridView1.Rows[6].Cells[colIndex].Value = shc[j].mean;
-                        dataGridView1.Rows[7].Cells[colIndex].Value = shc[j].range;
-                        dataGridView1.Rows[8].Cells[colIndex].Value = qhc.LastQueryStrings.FirstOrDefault();
+                        //dataGridView1.Rows[0].Cells[colIndex].Value = shc[j].CoordinateSystem;
+                        dataGridView1.Rows[0].Cells[colIndex].Value = shc[j].LinearUnit;
+                        dataGridView1.Rows[1].Cells[colIndex].Value = shc[j].count;
+                        dataGridView1.Rows[2].Cells[colIndex].Value = shc[j].sum;
+                        dataGridView1.Rows[3].Cells[colIndex].Value = shc[j].min;
+                        dataGridView1.Rows[4].Cells[colIndex].Value = shc[j].max;
+                        dataGridView1.Rows[5].Cells[colIndex].Value = shc[j].mean;
+                        //dataGridView1.Rows[7].Cells[colIndex].Value = shc[j].range;
+                        dataGridView1.Rows[6].Cells[colIndex].Value = qhc.LastQueryStrings.FirstOrDefault();
                     }
                     else
                     {
-                        dataGridView1.Rows.Add(new object[] { "Coordinate System", shc[j].CoordinateSystem }); //0
-                        dataGridView1.Rows.Add(new object[] { "Linear Unit", shc[j].LinearUnit }); //1
-                        dataGridView1.Rows.Add(new object[] { "Count", shc[j].count }); //2
+                        //dataGridView1.Rows.Add(new object[] { "Coordinate System", shc[j].CoordinateSystem }); //0
+                        dataGridView1.Rows.Add(new object[] { "Units", shc[j].LinearUnit }); //1
+                        dataGridView1.Rows.Add(new object[] { "Number of Features", shc[j].count }); //2
                         dataGridView1.Rows.Add(new object[] { "Sum", shc[j].sum.ToString("N") }); //3
                         dataGridView1.Rows.Add(new object[] { "Min", shc[j].min.ToString("N") }); //4
                         dataGridView1.Rows.Add(new object[] { "Max", shc[j].max.ToString("N") }); //5
                         dataGridView1.Rows.Add(new object[] { "Mean", shc[j].mean.ToString("N") });                                          //6
-                        dataGridView1.Rows.Add(new object[] { "Range", shc[j].range.ToString("N") }); //7
                         dataGridView1.Rows.Add(new object[] { "Query String", qhc.LastQueryStrings.FirstOrDefault() });
+                        //dataGridView1.Rows.Add(new object[] { "Range", shc[j].range.ToString("N") }); //7
                     }
                 }
             }
@@ -435,7 +435,7 @@ namespace GAWetlands
 
             if (shc.DoConversion(tsi.Text))
             {
-                for (int i = 3; i < 8; i++)
+                for (int i = 2; i < 6; i++)
                 {
                     double value = double.NaN;
                     switch (i)
@@ -457,11 +457,10 @@ namespace GAWetlands
                             break;
                     }
 
-                    dataGridView1[colIndex, i].Value = value;
+                    dataGridView1[colIndex, i].Value = value.ToString("N");
                 }
 
-                dataGridView1[colIndex, StatHelperClass.RangeIndex].Value = shc.range;
-                dataGridView1[colIndex, 1].Value = tsi.Text;
+                dataGridView1[colIndex, 0].Value = tsi.Text;
             }
         }
 

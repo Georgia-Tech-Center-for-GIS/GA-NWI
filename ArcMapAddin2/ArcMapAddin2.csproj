@@ -379,6 +379,131 @@
     </AddInContent>
   </ItemGroup>
   <ItemGroup>
+    <AddInContent Include="Install\Symbology\NWIPlusBSS.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Install\Symbology\NWIPlusCS.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Install\Symbology\NWIPlusCSSD.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Install\Symbology\NWIPlusNT.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Install\Symbology\NWIPlusProvBird.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Install\Symbology\NWIPlusProvFish.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Install\Symbology\NWIPlusProvOtherWildHab.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Install\Symbology\NWIPlusProvUWPC.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Install\Symbology\NWIPlusSM.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Install\Symbology\NWIPlusSR.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Install\Symbology\NWIPlusSWD.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Install\Symbology\NWIPlusLandform.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Install\Symbology\NWIPlusLandformType.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Install\Symbology\NWIPlusLandscape.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Install\Symbology\NWIPlusLandscapeType.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Install\Symbology\NWIPlusWaterbody.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Install\Symbology\NWIPlusWaterbodyFlow.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Install\Symbology\NWIPlusWaterbodyFlowQ.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Install\Symbology\NWIPlusWaterbodyModifier.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Install\Symbology\NWIPlusWaterbodyModifierQ.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Install\Symbology\NWIPlusWaterbodyType.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Install\Symbology\NWIPlusWaterbodyTypeQ.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Install\Symbology\NWIPlusWaterbodyOtherModifier.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Install\Symbology\NWIPlusWaterbodyOtherModifierQ.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Install\Symbology\NWIPlusWaterflow.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
     <AddInContent Include="Images\point.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </AddInContent>
@@ -399,6 +524,13 @@
     <AddInContent Include="Install\Parser\NWI Tools.tbx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </AddInContent>
+    <None Include="Install\Symbology\Chemistry.lyr" />
+    <None Include="Install\Symbology\Class.lyr" />
+    <None Include="Install\Symbology\Soil.lyr" />
+    <None Include="Install\Symbology\Special.lyr" />
+    <None Include="Install\Symbology\Subsystem.lyr" />
+    <None Include="Install\Symbology\System.lyr" />
+    <None Include="Install\Symbology\Water.lyr" />
   </ItemGroup>
   <ItemGroup>
     <AddInContent Include="Images\Help.png">
