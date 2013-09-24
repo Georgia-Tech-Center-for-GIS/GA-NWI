@@ -1,0 +1,20 @@
+RB,1,Bedrock
+RB,2,Rubble
+UB,1,Cobble-gravel
+UB,2,Sand
+UB,3,Mud
+UB,4,Organic
+AB,1,Algal
+AB,2,Aquatic Moss
+AB,3,Rooted Vascular
+AB,4,Floating Vascular
+RS,1,Bedrock
+RS,2,Rubble
+US,1,Cobble-gravel
+US,2,Sand
+US,3,Mud
+US,4,Organic
+US,5,Vegetated
+EM,1,Persistant
+EM,2,Non-persistant
+EM,5,Phragmites astralis

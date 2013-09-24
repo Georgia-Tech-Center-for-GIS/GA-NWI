@@ -78,11 +78,11 @@ namespace GAWetlands
                 {
                     if (fieldName == "Chem")
                     {
-                        layerFile.Open(asmPath + "/Symbology/" + filenamePrefix + "Chemistry1" + "_" + geomTypeName + filenameSuffix + ".lyr");
+                        layerFile.Open(asmPath + "/Symbology/" + filenamePrefix + "Chemistry1" + filenameSuffix + ".lyr");
                     }
                     else
                     {
-                        layerFile.Open(asmPath + "/Symbology/" + filenamePrefix + filename + "_" + geomTypeName + filenameSuffix + ".lyr");
+                        layerFile.Open(asmPath + "/Symbology/" + filenamePrefix + filename +filenameSuffix + ".lyr");
                     }
                 }
 
@@ -368,15 +368,17 @@ namespace GAWetlands
 
             if (bUseNwi)
             {
-                fieldName = comboBox1.SelectedItem.ToString();
-                switch (fieldName)
+                fieldName = filename = comboBox1.SelectedItem.ToString();
+                switch (filename)
                 {
                     case "Water Regime":
                         fieldName = "Water1";
+                        filename = "Water";
                         break;
 
                     case "Special Modifier":
                         fieldName = "Special1";
+                        filename = "Special";
                         break;
 
                     case "Chemistry":
@@ -403,6 +405,7 @@ namespace GAWetlands
 
                     case "Waterflow":
                         fieldName = "Water_flow";
+                        filename = "Waterflow";
                         break;
 
                     case "Waterbody":
@@ -451,7 +454,7 @@ namespace GAWetlands
 
                     case "Bank / Shoreline Stabilization":
                         fieldName = "Bank_Shore";
-                        filename = "BS";
+                        filename = "BSS";
 
                         goto case "Rated";
 

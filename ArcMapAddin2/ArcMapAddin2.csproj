@@ -82,6 +82,10 @@
       <SpecificVersion>False</SpecificVersion>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="ESRI.ArcGIS.EngineCore, Version=10.0.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="ESRI.ArcGIS.Framework">
       <Private>False</Private>
     </Reference>
@@ -142,12 +146,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Config.esriaddinx</DependentUpon>
     </Compile>
-    <Compile Include="Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
+    <Compile Include="CommonQueryItems.cs" />
     <Compile Include="Form2.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -278,9 +277,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DescriptionBrowser.resx">
       <DependentUpon>DescriptionBrowser.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form2.resx">
       <DependentUpon>Form2.cs</DependentUpon>
@@ -524,13 +520,30 @@
     <AddInContent Include="Install\Parser\NWI Tools.tbx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </AddInContent>
-    <None Include="Install\Symbology\Chemistry.lyr" />
-    <None Include="Install\Symbology\Class.lyr" />
-    <None Include="Install\Symbology\Soil.lyr" />
-    <None Include="Install\Symbology\Special.lyr" />
-    <None Include="Install\Symbology\Subsystem.lyr" />
-    <None Include="Install\Symbology\System.lyr" />
-    <None Include="Install\Symbology\Water.lyr" />
+    <AddInContent Include="Install\Symbology\Chemistry.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+    <AddInContent Include="Install\Symbology\Class.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+    <AddInContent Include="Install\Symbology\Soil.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+    <AddInContent Include="Install\Symbology\Special.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+    <AddInContent Include="Install\Symbology\Subsystem.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+    <AddInContent Include="Install\Symbology\System.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+    <AddInContent Include="Install\Symbology\Water.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+    <AddInContent Include="Install\Symbology\WaterChemistry.lyr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
   </ItemGroup>
   <ItemGroup>
     <AddInContent Include="Images\Help.png">
@@ -539,6 +552,16 @@
   </ItemGroup>
   <ItemGroup>
     <AddInContent Include="Images\Parse.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Images\HelpSystemBlue48.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Images\NWIClip.cur">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </AddInContent>
   </ItemGroup>
@@ -563,5 +586,8 @@
     <ESRIAddInProperties>
       <Host>ArcMap</Host>
     </ESRIAddInProperties>
+    <VisualStudio>
+      <UserProperties ESRIImportCache="ESRI.ArcGIS.ADF.BaseClasses|ESRI.ArcGIS.ADF.CATIDs|ESRI.ArcGIS.ADF.COMSupport" />
+    </VisualStudio>
   </ProjectExtensions>
 </Project>

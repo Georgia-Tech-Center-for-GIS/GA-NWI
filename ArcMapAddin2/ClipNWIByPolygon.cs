@@ -14,16 +14,18 @@ using ESRI.ArcGIS.Geoprocessing;
 using ESRI.ArcGIS.SystemUI;
 using ESRI.ArcGIS.CatalogUI;
 using ESRI.ArcGIS.Catalog;
+using ESRI.ArcGIS.Framework;
 
 namespace GAWetlands
 {
-    class ClipNWI : ESRI.ArcGIS.Desktop.AddIns.Tool {
+    class ClipNWI : ESRI.ArcGIS.Desktop.AddIns.Tool
+    {
         IGPUtilities igpu = new GPUtilitiesClass();
         IGxDialog gd = new GxDialogClass();
         Geoprocessor gp = new Geoprocessor();
 
         protected void DoClip(IActiveView activeView, IGeometry geometry)
-        {           
+        {
             try
             {
                 ESRI.ArcGIS.Carto.IMap map = activeView.FocusMap;
@@ -43,7 +45,7 @@ namespace GAWetlands
 
                 gd.Title = "Save clipped feature class";
 
-                gd.ObjectFilter = new GxFilterFeatureClassesClass (); //new GxFilterFeatureClassesClass();
+                gd.ObjectFilter = new GxFilterFeatureClassesClass(); //new GxFilterFeatureClassesClass();
                 if (gd.DoModalSave(ArcMap.Application.hWnd) == false)
                 {
                     return;
@@ -83,7 +85,7 @@ namespace GAWetlands
                 IFields flds = objectClassDescription.RequiredFields;
                 IFieldEdit fld_Edit = (IFieldEdit)flds.get_Field(flds.FindField("Shape"));
 
-                IGeometryDefEdit pGeoDef = (IGeometryDefEdit) fld_Edit.GeometryDef;
+                IGeometryDefEdit pGeoDef = (IGeometryDefEdit)fld_Edit.GeometryDef;
                 pGeoDef.SpatialReference_2 = igd_dest.SpatialReference;
 
                 IFeatureClass ifc_new = workspace.CreateFeatureClass("AAA", flds, null, null, esriFeatureType.esriFTSimple, ifl_active.FeatureClass.ShapeFieldName, "");
@@ -101,7 +103,7 @@ namespace GAWetlands
                 fl.Name = "IntersectingShape";
 
                 ISimpleFillSymbol sfs = new SimpleFillSymbolClass();
-                
+
                 ISimpleLineSymbol sls = new SimpleLineSymbolClass();
                 sls.Color = color;
                 sls.Width = 4.0;
@@ -110,15 +112,15 @@ namespace GAWetlands
                 color.NullColor = true;
 
                 sfs.Color = color;
-                sfs.Outline = sls ;
+                sfs.Outline = sls;
 
                 ISimpleRenderer isr = new SimpleRendererClass();
                 isr.Symbol = (ISymbol)sfs;
 
                 gfl.Renderer = (IFeatureRenderer)isr;
-                
+
                 IObjectCopy cpy = new ObjectCopyClass();
-                
+
                 iwe.StartEditing(true);
                 iwe.StartEditOperation();
 
@@ -161,7 +163,7 @@ namespace GAWetlands
         void gp_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             IStepProgressor isp = ArcMap.Application.StatusBar.ProgressBar;
-            ArcMap.Application.StatusBar.ProgressBar.Position = Convert.ToInt32( (e.ProgressPercentage * (isp.MaxRange - isp.MinRange) + isp.MinRange));
+            ArcMap.Application.StatusBar.ProgressBar.Position = Convert.ToInt32((e.ProgressPercentage * (isp.MaxRange - isp.MinRange) + isp.MinRange));
         }
 
         void gp_ToolExecuted(object sender, ToolExecutedEventArgs e)
@@ -195,6 +197,15 @@ namespace GAWetlands
                     gp.ProgressChanged -= gp_ProgressChanged;
                     break;
             }
+        }
+
+        protected static string GetAssemblyPath()
+        {
+            var codeBase = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
+            var uriBuilder = new UriBuilder(codeBase);
+            var asmPath = Uri.UnescapeDataString(uriBuilder.Path);
+            asmPath = System.IO.Path.GetDirectoryName(asmPath);
+            return asmPath;
         }
 
         protected void SelectArrowToolOnToolbar()

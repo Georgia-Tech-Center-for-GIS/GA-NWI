@@ -1,11 +1,11 @@
 ﻿<ESRI.Configuration xmlns="http://schemas.esri.com/Desktop/AddIns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <Name>GeorgiaWetlandTool</Name>
+  <Name>Georgia Wetlands Tool</Name>
   <AddInID>{a6e2253a-7b44-4f92-a477-ee55801e908f}</AddInID>
-  <Description>Type in a description for this Add-in.</Description>
+  <Description>Tool for the symbolizing, querying, clipping, and understanding of NWI and NWI plus data.</Description>
   <Version>1.0</Version>
   <Image>Images\ArcMapAddin2.png</Image>
-  <Author>gtg221h</Author>
-  <Company>CGIS, Georgia Tech</Company>
+  <Author>Georgia Tech Center for GIS</Author>
+  <Company>Georgia Institute of Technology</Company>
   <Date>8/9/2013</Date>
   <Targets>
     <Target name="Desktop" version="10.0" />
@@ -27,15 +27,15 @@
         </Toolbar>
       </Toolbars>
       <Commands>
-        <Button id="BtnHelp" class="BtnHelp" category="NWI" caption ="NWI Descriptions" image="Images\Help.png"></Button>
+        <Button id="BtnHelp" class="BtnHelp" category="NWI" caption ="NWI Descriptions" image="Images\HelpSystemBlue48.png"></Button>
         <Button id="BtnSymbolize_Universal" class="BtnSymbolize_Universal" caption="Symbolize by predefined NWI symbology" category="NWI" onDemand="false" image="Images\BtnSymbolize_Water_Plus.png"></Button>
 
         <Button id="BtnQuery_NWICombined" class="BtnQueryCombined" category="NWI" image="Images\sigma_plus.png" caption="NWI+ (LLWW) Query"></Button>
 
         <Button id="Btn_InvokeParser" class="BtnInvokeParser" category="NWI" caption="Parse NWI Features" onDemand="false" image="Images\Parse.png"></Button>
         
-        <Tool id="BtnClipByPolygon" class="ClipNWIByPolygon" caption="Clip NWI by polygon" category="NWI" image="Images\polygon.png" />
-        <Tool id="BtnClipByRadius" class="ClipNWIByRadius" caption="Clip NWI by radius from selected point." category="NWI" image="Images\point.png"/>
+        <Tool id="BtnClipByPolygon" class="ClipNWIByPolygon" cursor="Images\NWIClip.cur" caption="Clip NWI by polygon" category="NWI" image="Images\polygon.png" />
+        <Tool id="BtnClipByRadius" class="ClipNWIByRadius" cursor="Images\NWIClip.cur" caption="Clip NWI by radius from selected point." category="NWI" image="Images\point.png"/>
 
         <ToolPalette id="Georgia_Tech_GAWetlands_My_Tool_Palette" caption="NWI Clipping Tools" category="Add-In Controls" isMenuStyle="true" columns="0">
           <Items>

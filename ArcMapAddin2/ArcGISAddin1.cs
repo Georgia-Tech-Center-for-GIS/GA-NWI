@@ -89,12 +89,6 @@ namespace GAWetlands
 
     public class BtnQueryAll : NWIQueryButton
     {
-        protected override void OnClick()
-        {
-            NWIQuery qf = new NWIQuery();
-            qf.Show();
-            base.OnClick();
-        }
     }
 
     public class BtnQueryNWIPlus : NWIQueryButton

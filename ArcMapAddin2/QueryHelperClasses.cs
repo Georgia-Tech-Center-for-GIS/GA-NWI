@@ -17,7 +17,7 @@ namespace GAWetlands
 {
     public class QueryHelperClass
     {
-        protected string field = "";
+        protected string[] fields = null;
 
         public System.Collections.Generic.List<string> LastQueryStrings = new System.Collections.Generic.List<string>();
 
@@ -67,13 +67,27 @@ namespace GAWetlands
 
             for (int ii = 0; ii < values.Length; ii++)
             {
-                if (values[ii].IndexOf("=") > -1)
+                if (fields.Length > 1)
                 {
-                    qf.WhereClause = qf.WhereClause + " (" + values[ii] + ") ";
+                    string[] curr_values = values[ii].Split(';');
+
+                    qf.WhereClause += " (";
+
+                    for (int j = 0; j < fields.Length; j++)
+                    {
+                        qf.WhereClause = qf.WhereClause + fields[j] + "='" + curr_values[j].Trim() +"' ";
+
+                        if (j < fields.Length - 1)
+                        {
+                            qf.WhereClause += " AND ";
+                        }
+                    }
+
+                    qf.WhereClause += ") ";
                 }
                 else
                 {
-                    qf.WhereClause = qf.WhereClause + " " + field + "='" + values[ii] + "'";// +((ii <= (values.Length - 1)) ? "" : "OR ");
+                    qf.WhereClause = qf.WhereClause + " " + fields[0] + "='" + values[ii] + "'";// +((ii <= (values.Length - 1)) ? "" : "OR ");
                 }
 
                 if (ii < (values.Length - 1))
@@ -99,25 +113,73 @@ namespace GAWetlands
             return queryValues;
         }
 
-        public virtual string[] getQueryValueOptions(string queryType)
+        public virtual string[] getQueryValueOptions(string fieldname, string filename)
         {
             ESRI.ArcGIS.Carto.ILayerFile layerFile = new LayerFileClass();
             //layerFile.Open("\\\\tornado\\Research3\\Tony\\Wetlands\\wetlands10.1\\10.0\\" + queryType + "_Poly.lyr");
-            layerFile.Open(GetAssemblyPath() + "\\Symbology\\" + queryType + "_Polygon.lyr");
+            layerFile.Open(GetAssemblyPath() + "\\Symbology\\" + filename + ".lyr");
 
             IGeoFeatureLayer igfl_lyr = (IGeoFeatureLayer)layerFile.Layer;
             IUniqueValueRenderer iuvr = (IUniqueValueRenderer)igfl_lyr.Renderer;
 
-            string[] s = new string[iuvr.ValueCount];
+            fields = new string[]{ fieldname };
 
-            for (int j = 0; j < iuvr.ValueCount; j++)
+            if (iuvr.FieldCount == 1)
             {
-                s[j] = iuvr.Label[iuvr.Value[j]] + " (" + iuvr.Value[j] + ")";
+                string[] s = new string[iuvr.ValueCount];
+
+                for (int j = 0; j < iuvr.ValueCount; j++)
+                {
+                    s[j] = iuvr.Label[iuvr.Value[j]] + " (" + iuvr.Value[j] + ")";
+                }
+
+                return s;
             }
+            else
+            {
+                string[] s = new string[iuvr.ValueCount];
+                string WhereClause = "";
 
-            field = queryType;
+                char[] delimiter = { iuvr.FieldDelimiter[0] };
 
-            return s;
+                string prefix = ""; //sql.GetSpecialCharacter(esriSQLSpecialCharacters.esriSQL_DelimitedIdentifierPrefix);
+                string suffix = ""; //'sql.GetSpecialCharacter(esriSQLSpecialCharacters.esriSQL_DelimitedIdentifierSuffix);
+
+                List<string> l = new List<string>();
+
+                for (int j = 0; j < iuvr.ValueCount; j++ )
+                {
+                    string[] currValues = iuvr.Value[j].Split(delimiter);
+
+                    s[j] = iuvr.Label[iuvr.Value[j]] + "( " + string.Join(";", currValues) + " )";
+                }
+
+                for (int k = 0; k < iuvr.FieldCount; k++)
+                {
+                    l.Add(iuvr.Field[k]);
+                }
+
+                fields = l.ToArray();
+#if false
+
+                for (int j = 0; j < iuvr.ValueCount; j++)
+                {
+                    WhereClause = "";
+                    string[] currValues = iuvr.Value[j].Split(delimiter);
+
+                    for (int k = 0; k < currValues.Length; k++)
+                    {
+                        if (k > 0)
+                            WhereClause += " AND ";
+
+                        WhereClause += prefix + iuvr.Field[k] + suffix + " = '" + currValues[k].Trim() + "'";
+                    }
+
+                    s[j] = iuvr.Label[iuvr.Value[j]] + " (" + WhereClause + ")";
+                }
+#endif
+                return s;
+            }
         }
     }
 
@@ -157,7 +219,7 @@ namespace GAWetlands
         {
         }
 
-        public override string[] getQueryValueOptions(string queryType)
+        public override string[] getQueryValueOptions(string fieldname, string filename)
         {
             System.Collections.Generic.List<System.Collections.ArrayList> valuesAndLabels = null;
 
@@ -170,7 +232,7 @@ namespace GAWetlands
                 values[i] = valuesAndLabels[i][2] + " (" + valuesAndLabels[i][0] + "; " + valuesAndLabels[i][1] + ")";
             }
 
-            field = queryType;
+            fields = new string[] { fieldname };
 
             return values;
         }
@@ -224,13 +286,13 @@ namespace GAWetlands
         }
     }
 
-    class QueryHelperSubsystem : QueryHelperSubclass
+    class QueryHelperSubsystem : QueryHelperClass
     {
         public QueryHelperSubsystem()
         {
         }
 
-        public override string[] getQueryValueOptions(string queryType)
+        public override string[] getQueryValueOptions(string fieldname, string filename)
         {
             System.Collections.Generic.List<System.Collections.ArrayList> valuesAndLabels = null;
             //valuesAndLabels = CSVHelper.readCSV("\\\\tornado\\Research3\\Tony\\Wetlands\\wetlands10.1\\10.0\\Subsystem.csv");
@@ -246,7 +308,7 @@ namespace GAWetlands
             values[valuesAndLabels.Count] = "All Subtidal (E, M; 1)";
             values[valuesAndLabels.Count + 1] = "All Intertidal (E, M; 2)";
 
-            field = queryType;
+            fields = new string[] { fieldname };
 
             return values;
         }
@@ -254,7 +316,7 @@ namespace GAWetlands
 
     class QueryHelperLLWW : QueryHelperClass
     {
-        public string[] getQueryValueOptions(string queryType, string fileSuffix)
+        public override string[] getQueryValueOptions(string queryType, string fileSuffix)
         {
             ESRI.ArcGIS.Carto.ILayerFile layerFile = new LayerFileClass();
             //layerFile.Open("\\\\tornado\\Research3\\Tony\\Wetlands\\wetlands10.1\\10.0\\" + queryType + "_Poly.lyr");
@@ -263,7 +325,7 @@ namespace GAWetlands
             IGeoFeatureLayer igfl_lyr = (IGeoFeatureLayer)layerFile.Layer;
             IUniqueValueRenderer iuvr = (IUniqueValueRenderer)igfl_lyr.Renderer;
 
-            field = queryType;
+            fields = new string[]{ queryType };
 
             if (iuvr.FieldCount == 1)
             {
@@ -316,6 +378,7 @@ namespace GAWetlands
         }
     }
 
+#if false
     class QueryHelperLLWW_Modifier : QueryHelperLLWW
     {
         private IUniqueValueRenderer iuvr = null;
@@ -368,4 +431,5 @@ namespace GAWetlands
         }
 
     }
+#endif
 }
