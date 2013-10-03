@@ -25,6 +25,8 @@ namespace GAWetlands
             //System.IO.StreamWriter sw = new System.IO.StreamWriter("C:\\Log.txt");
             List<StatHelperClass> shc = new List<StatHelperClass>();
 
+            bool bAborted = false;
+
             try {
                 if (ifl_active == null)
                 {
@@ -41,6 +43,7 @@ namespace GAWetlands
                 {
                     if (System.Windows.Forms.MessageBox.Show("This will (p)re-calculate areas for ALL " + featureCount + " features in the selected layer. Proceed?", "", MessageBoxButtons.YesNo).Equals(DialogResult.No))
                     {
+                        bAborted = true;
                         return;
                     }
                 }
@@ -87,9 +90,12 @@ namespace GAWetlands
 
                 try
                 {
-                    Form2 f2 = new Form2();
-                    f2.shc = shc;
-                    f2.ShowDialog();
+                    if (!bAborted)
+                    {
+                        Form2 f2 = new Form2();
+                        f2.shc = shc;
+                        f2.ShowDialog();
+                    }
                 }
                 catch (Exception e)
                 {
@@ -118,8 +124,10 @@ namespace GAWetlands
                     if (shc[j].useArealUnit)
                     {
                         dataGridView1.Columns[colIndex].ContextMenuStrip.Items.Add(new ToolStripLabel("Acres", null, false, new EventHandler(eh)));
-                        dataGridView1.Columns[colIndex].ContextMenuStrip.Items.Add(new ToolStripLabel("Hectares", null, false, new EventHandler(eh)));
                         dataGridView1.Columns[colIndex].ContextMenuStrip.Items.Add(new ToolStripLabel("Square Feet", null, false, new EventHandler(eh)));
+                        dataGridView1.Columns[colIndex].ContextMenuStrip.Items.Add(new ToolStripLabel("Square Miles", null, false, new EventHandler(eh)));
+                        dataGridView1.Columns[colIndex].ContextMenuStrip.Items.Add(new ToolStripSeparator());
+                        dataGridView1.Columns[colIndex].ContextMenuStrip.Items.Add(new ToolStripLabel("Hectares", null, false, new EventHandler(eh)));
                         dataGridView1.Columns[colIndex].ContextMenuStrip.Items.Add(new ToolStripLabel("Square Meters", null, false, new EventHandler(eh)));
                     }
                     else
@@ -128,7 +136,7 @@ namespace GAWetlands
                         dataGridView1.Columns[colIndex].ContextMenuStrip.Items.Add(new ToolStripLabel("Meters", null, false, new EventHandler(eh)));
                     }
 
-                    if (dataGridView1.Rows.Count > 0)
+                    if (dataGridView1.Rows.Count >= 7)
                     {
                         //dataGridView1.Rows[0].Cells[colIndex].Value = shc[j].CoordinateSystem;
                         dataGridView1.Rows[0].Cells[colIndex].Value = shc[j].LinearUnit;
@@ -138,10 +146,11 @@ namespace GAWetlands
                         dataGridView1.Rows[4].Cells[colIndex].Value = shc[j].max;
                         dataGridView1.Rows[5].Cells[colIndex].Value = shc[j].mean;
                         //dataGridView1.Rows[7].Cells[colIndex].Value = shc[j].range;
-                        dataGridView1.Rows[6].Cells[colIndex].Value = qhc.LastQueryStrings.FirstOrDefault();
+                        dataGridView1.Rows[6].Cells[colIndex].Value = (qhc == null)? "" : qhc.LastQueryStrings.FirstOrDefault();
                     }
                     else
                     {
+                        dataGridView1.Rows.Clear();
                         //dataGridView1.Rows.Add(new object[] { "Coordinate System", shc[j].CoordinateSystem }); //0
                         dataGridView1.Rows.Add(new object[] { "Units", shc[j].LinearUnit }); //1
                         dataGridView1.Rows.Add(new object[] { "Number of Features", shc[j].count }); //2
@@ -149,9 +158,11 @@ namespace GAWetlands
                         dataGridView1.Rows.Add(new object[] { "Min", shc[j].min.ToString("N") }); //4
                         dataGridView1.Rows.Add(new object[] { "Max", shc[j].max.ToString("N") }); //5
                         dataGridView1.Rows.Add(new object[] { "Mean", shc[j].mean.ToString("N") });                                          //6
-                        dataGridView1.Rows.Add(new object[] { "Query String", qhc.LastQueryStrings.FirstOrDefault() });
+                        dataGridView1.Rows.Add(new object[] { "Query String", (qhc == null)? "" : qhc.LastQueryStrings.FirstOrDefault() });
                         //dataGridView1.Rows.Add(new object[] { "Range", shc[j].range.ToString("N") }); //7
                     }
+
+                    DoConversion(dataGridView1, shc[j], "Acres", colIndex);
                 }
             }
         }
@@ -180,13 +191,9 @@ namespace GAWetlands
             return dataGridView1.Columns.Add(dvc);
         }
 
-        public static void DoConversion(ToolStripItem tsi, DataGridView dataGridView1)
+        public static void DoConversion(DataGridView dataGridView1, StatHelperClass shc, string Text, int colIndex)
         {
-            ContextMenuStrip cms = (ContextMenuStrip)tsi.Owner;
-            StatHelperClass shc = (StatHelperClass)((object[])cms.Tag)[0];
-            int colIndex = (int)((object[])cms.Tag)[1];
-
-            if (shc.DoConversion(tsi.Text))
+            if (shc.DoConversion(Text))
             {
                 for (int i = 2; i < 6; i++)
                 {
@@ -212,9 +219,17 @@ namespace GAWetlands
 
                     dataGridView1[colIndex, i].Value = value.ToString("N");
                 }
-
-                dataGridView1[colIndex, 0].Value = tsi.Text;
+                dataGridView1[colIndex, 0].Value = Text;
             }
+        }
+
+        public static void DoConversion(ToolStripItem tsi, DataGridView dataGridView1)
+        {
+            ContextMenuStrip cms = (ContextMenuStrip)tsi.Owner;
+            StatHelperClass shc = (StatHelperClass)((object[])cms.Tag)[0];
+            int colIndex = (int)((object[])cms.Tag)[1];
+
+            DoConversion(dataGridView1, shc, tsi.Text, colIndex);
         }
 
         public static void ExportGridControlContentsExcel(DataGridView dataGridView1)

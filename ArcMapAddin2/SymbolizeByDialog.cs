@@ -309,7 +309,7 @@ namespace GAWetlands
             radioButton1_CheckedChanged(null, null);
         }
 
-        private string[] NWICats = { "System", "Class", "Water Regime", "Chemistry", "Soil","Special Modifier" };
+        private string[] NWICats = { "System","Subsystem", "Class", "Water Regime", "Chemistry", "Soil","Special Modifier" };
         private string[] NWIPlusCats = { "Landscape",
                                          "Landscape Type",
                                          "Landform",

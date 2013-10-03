@@ -83,6 +83,10 @@ namespace GAWetlands
                 case "Meters":
                     newLinearUnits = esriUnits.esriMeters;
                     break;
+
+                case "Square Miles":
+                    newArealUnits = esriAreaUnits.esriSquareMiles;
+                    break;
             }
 
             igpau.Units = this.currentAreaUnit;

@@ -24,24 +24,16 @@ namespace GAWetlands
         IGxDialog gd = new GxDialogClass();
         Geoprocessor gp = new Geoprocessor();
 
-        protected void DoClip(IActiveView activeView, IGeometry geometry)
+        protected void DoClip(IActiveView activeView, IFeatureLayer ifl_active, IGeometry geometry)
         {
             try
             {
                 ESRI.ArcGIS.Carto.IMap map = activeView.FocusMap;
                 ESRI.ArcGIS.Carto.ILayerFile layerFile = new ESRI.ArcGIS.Carto.LayerFileClass();
 
-                if (ArcMap.Document.SelectedLayer == null)
-                {
-                    System.Windows.Forms.MessageBox.Show("Select a layer before continuing.");
-                    return;
-                }
-
                 ISpatialFilter isf = new SpatialFilterClass();
                 isf.Geometry = geometry;
                 isf.SpatialRel = esriSpatialRelEnum.esriSpatialRelIntersects;
-
-                IFeatureLayer ifl_active = (IFeatureLayer)ArcMap.Document.SelectedLayer;
 
                 gd.Title = "Save clipped feature class";
 
@@ -64,29 +56,17 @@ namespace GAWetlands
                     }
                 }
 
-                IGeoDataset igd_dest = (IGeoDataset)ifl_active.FeatureClass;
-
-                if (igd_dest.SpatialReference.Name != geometry.SpatialReference.Name)
-                {
-                    geometry.Project(igd_dest.SpatialReference);
-                }
-
                 // Create a new in-memory workspace. This returns a name object.
                 InMemoryWorkspaceFactory wsf = new InMemoryWorkspaceFactoryClass();
                 IWorkspaceName workspaceName = wsf.Create(null, "MyWorkspace", null, 0);
 
                 IName name = (IName)workspaceName;
 
-                // Open the workspace through the name object.
-                IFeatureWorkspace workspace = (IFeatureWorkspace)name.Open();
-                IWorkspaceEdit iwe = (IWorkspaceEdit)workspace;
+                IFeatureWorkspace workspace;
+                IWorkspaceEdit iwe;
+                IFields flds;
 
-                ESRI.ArcGIS.Geodatabase.IObjectClassDescription objectClassDescription = new ESRI.ArcGIS.Geodatabase.FeatureClassDescriptionClass();
-                IFields flds = objectClassDescription.RequiredFields;
-                IFieldEdit fld_Edit = (IFieldEdit)flds.get_Field(flds.FindField("Shape"));
-
-                IGeometryDefEdit pGeoDef = (IGeometryDefEdit)fld_Edit.GeometryDef;
-                pGeoDef.SpatialReference_2 = igd_dest.SpatialReference;
+                setFeatureSpatialReference(ifl_active, name, out workspace, out iwe, out flds);
 
                 IFeatureClass ifc_new = workspace.CreateFeatureClass("AAA", flds, null, null, esriFeatureType.esriFTSimple, ifl_active.FeatureClass.ShapeFieldName, "");
                 IFeatureLayer fl = new FeatureLayerClass();
@@ -158,6 +138,21 @@ namespace GAWetlands
             {
                 SelectArrowToolOnToolbar();
             }
+        }
+
+        private static void setFeatureSpatialReference(IFeatureLayer ifl_active, IName name, out IFeatureWorkspace workspace, out IWorkspaceEdit iwe, out IFields flds)
+        {
+            IGeoDataset igd_dest = (IGeoDataset)ifl_active.FeatureClass;
+            // Open the workspace through the name object.
+            workspace = (IFeatureWorkspace)name.Open();
+            iwe = (IWorkspaceEdit)workspace;
+
+            ESRI.ArcGIS.Geodatabase.IObjectClassDescription objectClassDescription = new ESRI.ArcGIS.Geodatabase.FeatureClassDescriptionClass();
+            flds = objectClassDescription.RequiredFields;
+            IFieldEdit fld_Edit = (IFieldEdit)flds.get_Field(flds.FindField("Shape"));
+
+            IGeometryDefEdit pGeoDef = (IGeometryDefEdit)fld_Edit.GeometryDef;
+            pGeoDef.SpatialReference_2 = igd_dest.SpatialReference;
         }
 
         void gp_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -273,13 +268,28 @@ namespace GAWetlands
         {
             IGeometry polygon = DrawPolygon(ArcMap.Document.ActiveView);
 
+            if (ArcMap.Document.SelectedLayer == null)
+            {
+                System.Windows.Forms.MessageBox.Show("Select a layer before continuing.");
+                return;
+            }
+
+            IFeatureLayer ifl_active = (IFeatureLayer)ArcMap.Document.SelectedLayer;
+
             if (polygon != null)
             {
-                DoClip(ArcMap.Document.ActiveView, polygon);
+                IGeoDataset igd_dest = (IGeoDataset)ifl_active.FeatureClass;
+
+                if (igd_dest.SpatialReference.Name != polygon.SpatialReference.Name)
+                {
+                    polygon.Project(igd_dest.SpatialReference);
+                }
+
+                DoClip(ArcMap.Document.ActiveView, ifl_active, polygon);
             }
             else
             {
-                System.Windows.Forms.MessageBox.Show("Shape drawing aborted!");
+                System.Windows.Forms.MessageBox.Show("Clip operation aborted!");
                 SelectArrowToolOnToolbar();
             }
         }
@@ -289,6 +299,14 @@ namespace GAWetlands
     {
         protected override void OnMouseDown(ESRI.ArcGIS.Desktop.AddIns.Tool.MouseEventArgs arg)
         {
+            if (ArcMap.Document.SelectedLayer == null)
+            {
+                System.Windows.Forms.MessageBox.Show("Select a layer before continuing.");
+                return;
+            }
+
+            IFeatureLayer ifl_active = (IFeatureLayer)ArcMap.Document.SelectedLayer;
+
             try
             {
                 IRgbColor rgbColor = new RgbColorClass();
@@ -305,30 +323,51 @@ namespace GAWetlands
                 IRubberBand2 rubberBand = new RubberPointClass();
 
                 IGeometry geometry = rubberBand.TrackNew(screenDisplay, symbol);
+
+                if (geometry == null) return;
+
+                try
+                {
+                    screenDisplay.SetSymbol(symbol);
+                    screenDisplay.DrawPoint(geometry);
+                    screenDisplay.FinishDrawing();
+                }
+                catch (Exception iii)
+                {
+                }
+
+                IGeoDataset igd_dest = (IGeoDataset)ifl_active.FeatureClass;
+
                 geometry.SpatialReference = ArcMap.Document.FocusMap.SpatialReference;
 
-                screenDisplay.SetSymbol(symbol);
-                screenDisplay.DrawPoint(geometry);
-                screenDisplay.FinishDrawing();
+                if (igd_dest.SpatialReference.Name != geometry.SpatialReference.Name)
+                {
+                    geometry.Project(igd_dest.SpatialReference);
+                }
 
                 ITopologicalOperator ito = (ITopologicalOperator)geometry;
 
                 IMap mp = ArcMap.Document.FocusMap;
-                ISpatialReference isr = mp.SpatialReference;
-                
+                ISpatialReference isr = igd_dest.SpatialReference;
+
                 IProjectedCoordinateSystem ipcs = (IProjectedCoordinateSystem)isr;
                 ILinearUnit ilu = ipcs.CoordinateUnit;
-                
-                string input = Microsoft.VisualBasic.Interaction.InputBox("Enter radius to use in map units ("+ ((ilu.Name.IndexOf("Foot", StringComparison.CurrentCultureIgnoreCase) > -1)? "feet" : ilu.Name.ToLower() + "s") +"): ", "Radius for Buffered Clip", "500");
+
+                string input = Microsoft.VisualBasic.Interaction.InputBox("Enter radius to use (in the units of the target NWI layer: " + ((ilu.Name.IndexOf("Foot", StringComparison.CurrentCultureIgnoreCase) > -1) ? "feet" : ilu.Name.ToLower() + "s") + ") ", "Radius for Buffered Clip", "500");
                 double distance = double.Parse(input);
 
                 IGeometry circle = ito.Buffer(distance);
 
-                DoClip(ArcMap.Document.ActiveView, circle);
+                DoClip(ArcMap.Document.ActiveView, ifl_active, circle);
             }
             catch (Exception e)
             {
+                //System.Windows.Forms.MessageBox.Show("Exception: " + e.Message + "\n\n" + e.StackTrace );
                 SelectArrowToolOnToolbar();
+            }
+            finally
+            {
+                //System.Windows.Forms.MessageBox.Show("Return");
             }
         }
     }

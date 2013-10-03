@@ -27,17 +27,48 @@
         </Toolbar>
       </Toolbars>
       <Commands>
-        <Button id="BtnHelp" class="BtnHelp" category="NWI" caption ="NWI Descriptions" image="Images\HelpSystemBlue48.png"></Button>
-        <Button id="BtnSymbolize_Universal" class="BtnSymbolize_Universal" caption="Symbolize by predefined NWI symbology" category="NWI" onDemand="false" image="Images\BtnSymbolize_Water_Plus.png"></Button>
-
-        <Button id="BtnQuery_NWICombined" class="BtnQueryCombined" category="NWI" image="Images\sigma_plus.png" caption="NWI+ (LLWW) Query"></Button>
-
-        <Button id="Btn_InvokeParser" class="BtnInvokeParser" category="NWI" caption="Parse NWI Features" onDemand="false" image="Images\Parse.png"></Button>
+        <Button id="Btn_InvokeParser" class="BtnInvokeParser"
+                category="NWI"
+                message="Parse NWI Features into its component parts."
+                caption="NWI Attribute Parser"
+                tip="NWI Attribute Parser"
+                onDemand="false" image="Images\Parse.png"></Button>
         
-        <Tool id="BtnClipByPolygon" class="ClipNWIByPolygon" cursor="Images\NWIClip.cur" caption="Clip NWI by polygon" category="NWI" image="Images\polygon.png" />
-        <Tool id="BtnClipByRadius" class="ClipNWIByRadius" cursor="Images\NWIClip.cur" caption="Clip NWI by radius from selected point." category="NWI" image="Images\point.png"/>
+        <Button id="BtnSymbolize_Universal" class="BtnSymbolize_Universal"
+                category="NWI"
+                message="Quickly symbolize wetland data across various levels of the NWI (Cowardin) and NWIPLUS (LLWW) classification systems."
+                caption="Symbolize"
+                tip="Symbolize"
+                onDemand="false" image="Images\BtnSymbolize_Water_Plus.png"></Button>
+        
+        <Button id="BtnHelp" class="BtnHelp"
+                category="NWI"
+                message="View detailed information on the NWI and NWIPLUS classification systems"
+                caption ="Wetlands Help"
+                tip="Wetlands Help"
+                image="Images\HelpSystemBlue48.png"></Button>
 
-        <ToolPalette id="Georgia_Tech_GAWetlands_My_Tool_Palette" caption="NWI Clipping Tools" category="Add-In Controls" isMenuStyle="true" columns="0">
+        <Button id="BtnQuery_NWICombined" class="BtnQueryCombined"
+                category="NWI"
+                tip="Query"
+                caption="Query"
+                message="Gather statistics across various levels of the NWI (Cowardin) and NWIPLUS (LLWW) classification systems through pre-defined queries"
+                image="Images\sigma_plus.png"></Button>
+        
+        <Tool id="BtnClipByPolygon" class="ClipNWIByPolygon" cursor="Images\NWIScissors.cur"
+                category="NWI"
+                message="Clip wetland (and other) data to a user drawn polygon"
+                caption="Clip NWI by polygon"
+                image="Images\polygon.png" />
+        
+        <Tool id="BtnClipByRadius" class="ClipNWIByRadius" cursor="Images\NWITarget.cur"
+                category="NWI"
+                tip="Clip by radius"
+                message="Clip wetland (and other) data by a user defined radius. Radial units are taken directly from the data frame's coordinate system."
+                caption="Clip by radius"
+                image="Images\point.png"/>
+
+        <ToolPalette id="Georgia_Tech_GAWetlands_My_Tool_Palette" tip="Clip" caption="Clip" category="Add-In Controls" isMenuStyle="true" columns="0">
           <Items>
             <Tool refID="BtnClipByPolygon" />
             <Tool refID="BtnClipByRadius" />

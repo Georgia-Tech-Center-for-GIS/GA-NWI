@@ -22,63 +22,6 @@ namespace GAWetlands
 {
     public class BtnSymbolize_Base : ESRI.ArcGIS.Desktop.AddIns.Button
     {
-        #region"Get Index Number from Layer Name"
-        // ArcGIS Snippet Title:
-        // Get Index Number from Layer Name
-        // 
-        // Long Description:
-        // Get the index number for the specified layer name.
-        // 
-        // Add the following references to the project:
-        // ESRI.ArcGIS.Carto
-        // 
-        // Intended ArcGIS Products for this snippet:
-        // ArcGIS Desktop (ArcEditor, ArcInfo, ArcView)
-        // ArcGIS Engine
-        // ArcGIS Server
-        // 
-        // Applicable ArcGIS Product Versions:
-        // 9.2
-        // 9.3
-        // 9.3.1
-        // 10.0
-        // 
-        // Required ArcGIS Extensions:
-        // (NONE)
-        // 
-        // Notes:
-        // This snippet is intended to be inserted at the base level of a Class.
-        // It is not intended to be nested within an existing Method.
-        // 
-
-        ///<summary>Get the index number for the specified layer name.</summary>
-        /// 
-        ///<param name="activeView">An IActiveView interface</param>
-        ///<param name="layerName">A System.String that is the layer name in the active view. Example: "states"</param>
-        ///  
-        ///<returns>A System.Int32 representing a layer number</returns>
-        ///  
-        ///<remarks>Return values of 0 and greater are valid layers. A return value of -1 means the layer name was not found.</remarks>
-        public static System.Int32 GetIndexNumberFromLayerName(ESRI.ArcGIS.Carto.IActiveView activeView, System.String layerName)
-        {
-            if (activeView == null || layerName == null)
-            {
-                return -1;
-            }
-            ESRI.ArcGIS.Carto.IMap map = activeView.FocusMap;
-
-            // Get the number of layers
-            int numberOfLayers = map.LayerCount;
-
-            // Loop through the layers and get the correct layer index
-            for (System.Int32 i = 0; i < numberOfLayers; i++)
-            {
-            //    return 0;
-            }
-
-            return 0;
-        }
-        #endregion
     }
 
     public class NWIQueryButton : ESRI.ArcGIS.Desktop.AddIns.Button {
@@ -110,6 +53,8 @@ namespace GAWetlands
             {
                 if ((System.Windows.Forms.Application.OpenForms["CombinedQueryForm"] as CombinedQueryForm) == null)
                     qf.Show();
+                else
+                    qf.BringToFront();
             }
             catch (Exception ggg)
             {
@@ -130,6 +75,8 @@ namespace GAWetlands
             {
                 if ((System.Windows.Forms.Application.OpenForms["SymbolizeByDialog"] as SymbolizeByDialog) == null)
                     sbd.Show(); // ShowDialog();
+                else
+                    sbd.BringToFront();
             }
             catch (Exception ggg)
             {
