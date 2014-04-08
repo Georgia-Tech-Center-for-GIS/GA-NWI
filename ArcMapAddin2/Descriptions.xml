@@ -1,0 +1,170 @@
+<groups>
+<group title='NWI Hierarchy Explanations'>
+	<value>
+		<title></title>
+		<description>
+			<h2>NWI Classification</h2>
+
+			<p>The structure of the NWI classification is hierarchical, progressing from Systems and Subsystems, at the most general levels,
+			to Classes, Subclasses, and Dominance Types. Modifiers for water regime, water chemistry, and soils are applied to Classes,
+			Subclasses, and Dominance Types.Special modifiers describe wetlands and deepwater habitats that have been either created
+			or highly modified by man or beavers.</p>
+		</description>
+	</value>
+</group>
+<group title='System'>
+	<value label='Marine' value='M'>
+		<pre> SYSTEM = MARINE (M): Marine, Open ocean and associated coastline </pre>
+
+		<h2>Definition:</h2>
+
+		<p>The Marine System describes open ocean or high-energy coastlines with salinities exceeding 30 ppt
+		and little or no dilution except outside the mouths of estuaries. Shallow coastal indentations or
+		bays without appreciable freshwater inflow; and coasts with exposed rocky islands,
+		that provide the mainland with little or no shelter from wind and waves, are also
+		considered part of the Marine system because they generally support typical marine biota.</p>
+
+		<h2>Limits:</h2>
+
+		<p>The Marine System extends from the outer edge of the continental shelf shoreward to one of
+		three lines:
+
+		<ol>
+			<li>The landward limit of tidal inundation (extreme high water of spring tides), including the splash zone from breaking waves;</li>
+			<li>The seaward limit of wetland emergents, trees, or shrubs;</li>
+			<li>The seaward limit of the Estuarine System, where the limit is determined by factors other than vegetation.</li>
+		</ol>
+		</p>
+
+		<h2>Description:</h2>
+
+		<p>The distribution of plants and animals in the Marine System primarily reflects differences
+		in four factors:
+		
+		<ol>
+			<li>degree of exposure of the site to waves; </li>
+			<li>texture and physicochemical nature of the substrate; </li>
+			<li>amplitude of the tides; and </li>
+			<li>Latitude, which governs water temperature, the intensity and duration of solar radiation, and the presence or absence of ice. </li>
+		</ol>
+		</p>
+	</value>
+	<value label='Estuarine' value='E'>
+		<pre>SYSTEM = ESTUARINE (E): Estuarine (Salt marshes and brackish tidal water)</pre>
+
+		<h2>Definition:</h2>
+
+		<p>The Estuarine System consists of deepwater tidal habitats and adjacent tidal wetlands that
+		are usually semienclosed by land but have open, partly obstructed, or sporadic access to the
+		open ocean, and in which ocean water is at least occasionally diluted by freshwater runoff from
+		the land. The salinity may be periodically increased above that of the open ocean by evaporation.
+		Along some low-energy coastlines there is appreciable dilution of seawater. Offshore areas with
+		typical estuarine plants and animals, such as red mangroves (Rhizophora mangle) and eastern
+		oysters (Crassostrea virginica), are also included in the Estuarine System.</p>
+
+		<p>The Estuarine System is defined in terms of Halinity and tidal influence. If tidal influence
+		is only partially obstructed by weirs or tide (flap) gates or if tidal flux is accomplished by
+		an underground connection, the area should be classified as Estuarine. However, if an area has
+		been completely cut off from tidal action (e.g. totally obstructed by a dike), the area,
+		regardless of its location or salinity would then fall into the Lacustrine or Palustrine Systems.</p>
+
+		<h2>Limits:</h2>
+
+		<p>The Estuarine System extends 
+
+		<ol>
+			<li>Upstream and landward to where ocean-derived salts measure less than 0.5% during the period
+				of average annual low flow;</li>
+			<li>To an imaginary line closing the mouth of a river, bay, or sound; </li>
+			<li>To the seaward limit of wetland emergents, shrubs, or trees where they are not included
+				in (2). The Estuarine System also includes offshore areas of continuously diluted seawater.</li>
+		</ol></p>
+		
+		<h2>Description:</h2>
+
+		<p>The Estuarine System includes both estuaries and lagoons. It s more strongly influenced by its
+		association with land than is the Marine System. In terms of wave action, estuaries are generally
+		considered to be low-energy systems. Estuarine water regimes and water chemistry are affected by
+		one or more of the following forces: oceanic tides, precipitation, freshwater runoff from land areas,
+		evaporation, and wind. Estuarine salinities range from hyperhaline to. The salinity may be variable,
+		as in hyperhaline lagoons (e.g., Laguna Madre, Texas) and most brackish estuaries (e.g., Chesapeake
+		Bay, Virginia-Maryland); or it may be relatively stable, as in sheltered euhaline embayments (e.g.,
+		Chincoteague Bay, Maryland) or brackish embayments with partly obstructed access or small tidal range
+		(e.g., Pamlico Sound, North Carolina).</p>
+
+		<p>The primary data used in identifying Estuarine Systems is the salinity and plant communities
+		inhabiting the areas. Lagoons that are hyperhaline are also included in the Estuarine System.
+		If the mouth of an Estuarine river has been extended into the Marine System by parallel breakwater,
+		the seaward limit of breakwaters forms the Estuarine/Marine break. The limit of the Estuarine System
+		is further identified by the seaward limit of the wetland emergents, shrubs, or trees where these
+		plants grow seaward of the line closing the mouth of a river, bay, or sound.</p>
+
+		<p>The seaward limit of Mollusks reefs occurring outside of the line closing the mouth of a river,
+		bay, or sound is also used to describe the Estuarine/Marine break. Bottom contour maps may be of
+		some use in delineating the Marine/Estuarine demarcation in these instances.</p>
+
+		<p>The location of the break separating the Estuarine System from the Tidal Riverine System can
+		often be judged by identifying the upstream limit of salt tolerant vegetation. This vegetation
+		change is observable on aerial photographs in many coastal areas.</p>
+	</value>
+	<value label='Riverine' value='R'>
+		<pre>SYSTEM = RIVERINE (R) Riverine  (Rivers, creeks, and streams)</pre>
+
+		<h2>Definition:</h2>
+
+		<p>The Riverine System includes all wetlands and deepwater habitats contained within a channel,
+		with two exceptions:
+
+		<ol>
+			<li>Wetlands dominated by trees, shrubs, persistent emergents, emergent mosses,or lichens, and </li>
+			<li>habitats with water containing oceanderived salts in excess of 0.5%. </li>
+		</ol>
+
+		A channel is an open conduit either naturally or artificially created which periodically or
+		continuously contains moving water, or which forms a connecting link between two bodies of standing water.
+		</p>
+
+		<h2>Limits:</h2>
+
+		<p>The Riverine System is bounded on the landward side by upland, by the channel bank
+		(including natural and man-made levees), or by wetland dominated by trees, shrubs, persistent
+		emergents, emergent mosses, or lichens. In braided streams, the system is bounded by the banks
+		forming the outer limits of the depression within which the braiding occurs.</p>
+
+		<p>The Riverine System terminates at the downstream end where the concentration of ocean-derived
+		salts in the water exceeds 0.5% during the period of annual average low flow, or where the channel
+		enters a lake. It terminates at the upstream end where tributary streams originate, or where the
+		channel leaves a lake. Springs discharging into a channel are considered part of the
+		Riverine System.</p>
+
+		<p>Where a river enters a lake, the extension of the Lacustrine shoreline across the mouth of the
+		river forms the Riverine/Lacustrine break. Oxbow lakes are placed in the Palustrine or
+		Lacustrine Systems unless they are connected to a Riverine System by an open channel at both ends,
+		either permanently or intermittently. Ruin-of-the-river dams should be handled in the same manner
+		as described above, with the Lacustrine System extending upstream to the contour approximating
+		the normal spillway or pool elevation.</p>
+
+		<h2>Description:</h2>
+
+		<p>Water is usually, but not always, flowing in the Riverine System.
+		Upland islands or Palustrine wetlands may occur in the channel, but hey are not included in the
+		Riverine System. Palustrine Moss-Lichen Wetlands, Emergent Wetlands, Scrub-Shrub Wetlands,
+		and Forested Wetlands may occur adjacent to the Riverine System, often on a floodplain.
+		Many biologists have suggested that all the wetlands occurring on the river floodplain
+		should be a part of the Riverine System because they consider their presence to be the result of
+		river flooding. However, we concur with Reid and Wood (1976:72,84) who stated,
+		"The floodplain is a flat expanse of land bordering an old river . . . Often the floodplain
+		may take the form of a very level plain occupied by the present stream channel, and it may never,
+		or only occasionally, be flooded . . . It is this subsurface water [the ground water] that controls
+		to a great extent the level of lake surfaces, the flow of streams, and the extent of swamps
+		and marshes."
+		</p>
+	</value>
+</group>
+<group title='Subsystem'>
+</group>
+<group title='Class, Subclass, and Dominance Types'>
+</group>
+<group title='Modifiers'>
+</group>
+</groups>
