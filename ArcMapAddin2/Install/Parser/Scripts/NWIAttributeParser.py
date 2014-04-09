@@ -142,7 +142,9 @@ def getUniqueAttribute (inputTable, field):
     Version = arcpy.GetInstallInfo("desktop").get("Version")
     # Use Search Cursors for Desktop version 10.0 or older
     #
-    if float(Version) <= 10.0:
+    from distutils.version import StrictVersion
+    
+    if StrictVersion(Version) <= StrictVersion('10.0'):
         rows = arcpy.SearchCursor(inputTable)
         for row in rows:
             values.add(row.getValue(field))
